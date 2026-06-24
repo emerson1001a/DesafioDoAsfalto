@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  background: #090909;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #090909;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  color: #f7f1df;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(245, 181, 27, .18), transparent 28rem),
+    radial-gradient(circle at 85% 12%, rgba(217, 39, 39, .16), transparent 22rem),
+    linear-gradient(135deg, #050505, #121212 52%, #080808);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .16;
+  background-image:
+    linear-gradient(45deg, rgba(255,255,255,.08) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255,255,255,.05) 25%, transparent 25%);
+  background-size: 9px 9px;
+  mix-blend-mode: overlay;
+}
+
+button, input {
+  font: inherit;
+}
+
+.brand-title {
+  font-family: Impact, Haettenschweiler, "Arial Narrow", sans-serif;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.road-card {
+  border: 1px solid rgba(245, 181, 27, .22);
+  background: linear-gradient(180deg, rgba(23,23,23,.94), rgba(9,9,9,.96));
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+
+.gold-button {
+  color: #17110a;
+  background: linear-gradient(180deg, #ffd15a, #f5b51b);
+  box-shadow: 0 12px 0 #8f5f00, 0 20px 38px rgba(0,0,0,.35);
+}
+
+.gold-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 8px 0 #8f5f00, 0 14px 28px rgba(0,0,0,.35);
+}
+
+.answer {
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.055);
+}
+
+.answer-correct {
+  border-color: rgba(47, 196, 125, .95);
+  background: rgba(47, 196, 125, .24);
+}
+
+.answer-wrong {
+  border-color: rgba(239, 68, 68, .95);
+  background: rgba(239, 68, 68, .25);
+}
