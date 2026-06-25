@@ -291,7 +291,7 @@ export default function Home() {
               </div>
               <div className="grid gap-3 p-5">
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
-                  Compartilhar resultado
+                  Desafiar os parceiros
                 </button>
                 <button onClick={iniciar} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
                   Tentar de novo
@@ -315,7 +315,7 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-end bg-black/75 p-4">
           <div className="mx-auto w-full max-w-md rounded-2xl border border-gold/30 bg-coal p-5 shadow-hard">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-black">Compartilhar resultado</h2>
+              <h2 className="text-xl font-black">Mandar o desafio</h2>
               <button onClick={() => setModal(false)} className="rounded-lg bg-stone-800 px-3 py-2 font-black">X</button>
             </div>
             <div className="mb-4 rounded-xl border border-stone-700 bg-black/35 p-4">

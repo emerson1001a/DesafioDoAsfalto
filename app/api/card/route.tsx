@@ -10,6 +10,8 @@ export async function GET(request: NextRequest) {
   const instagram = searchParams.get("instagram")?.slice(0, 32) || "";
   const pontuacao = Math.max(0, Math.min(10, Number(searchParams.get("score") || 0)));
   const classificacao = obterClassificacao(pontuacao);
+  const imagemPassageiro = new URL("/images/passageiro-carona.png", request.url).toString();
+  const usarImagemPassageiro = classificacao.fundo === "passageiro";
 
   return new ImageResponse(
     (
@@ -22,8 +24,12 @@ export async function GET(request: NextRequest) {
           justifyContent: "space-between",
           padding: "82px",
           color: "#f8f0dc",
+          position: "relative",
+          overflow: "hidden",
           background:
-            classificacao.fundo === "sunset"
+            usarImagemPassageiro
+              ? "#050505"
+              : classificacao.fundo === "sunset"
               ? "linear-gradient(160deg, #070707 0%, #3d1706 48%, #f5a51b 100%)"
               : classificacao.fundo === "cabine"
                 ? "linear-gradient(160deg, #050505 0%, #151515 45%, #1c6c4b 100%)"
@@ -35,13 +41,31 @@ export async function GET(request: NextRequest) {
           fontFamily: "Arial"
         }}
       >
+        {usarImagemPassageiro && (
+          <img
+            src={imagemPassageiro}
+            alt=""
+            width="1080"
+            height="1920"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "1080px",
+              height: "1920px",
+              objectFit: "cover",
+              objectPosition: "64% center"
+            }}
+          />
+        )}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(circle at 20% 10%, rgba(255,255,255,.22), transparent 280px), repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 4px, transparent 4px 20px)",
-            opacity: .5
+              usarImagemPassageiro
+                ? "linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,.18) 34%, rgba(0,0,0,.82) 76%, rgba(0,0,0,.96) 100%), linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.42) 48%, rgba(0,0,0,.20) 100%)"
+                : "radial-gradient(circle at 20% 10%, rgba(255,255,255,.22), transparent 280px), repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 4px, transparent 4px 20px)",
+            opacity: usarImagemPassageiro ? 1 : .5
           }}
         />
 
@@ -62,7 +86,15 @@ export async function GET(request: NextRequest) {
           <div style={{ display: "flex", fontSize: "34px", fontWeight: 800 }}>@zedagraxa.oficial</div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "34px", zIndex: 1 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "34px",
+            zIndex: 1,
+            maxWidth: usarImagemPassageiro ? "820px" : "100%"
+          }}
+        >
           <div style={{ display: "flex", fontSize: "56px", fontWeight: 800 }}>{nome}</div>
           <div style={{ display: "flex", fontSize: "126px", lineHeight: 1, fontWeight: 950, letterSpacing: "-2px" }}>
             {pontuacao} DE 10
