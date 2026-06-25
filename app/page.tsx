@@ -65,6 +65,10 @@ export default function Home() {
   const instagramLimpo = instagramCompartilhar.trim() || instagram.trim();
   const instagramCard = incluirInstagram && instagramLimpo ? (instagramLimpo.startsWith("@") ? instagramLimpo : `@${instagramLimpo}`) : "";
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
+  const origemUrl = typeof window === "undefined" ? "" : window.location.origin + window.location.pathname;
+  const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo` : "";
+  const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl);
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(textoGrupo)}`;
 
   function iniciar() {
     localStorage.setItem(nomeKey, nome);
@@ -142,13 +146,10 @@ export default function Home() {
     setTimeout(() => registrarResultado(false), 0);
   }
 
-  async function compartilharGrupoWhatsapp() {
+  function registrarCompartilhamento() {
     localStorage.setItem(nomeKey, nomeCompartilhar || nome);
     localStorage.setItem(instaKey, instagramCompartilhar || instagram);
-    await registrarResultado(true);
-    const url = window.location.origin + window.location.pathname + "?utm_source=whatsapp_grupo";
-    const texto = textoWhatsappGrupo(classificacao.id, acertos, url);
-    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
+    void registrarResultado(true);
   }
 
   async function salvarImagem() {
@@ -165,22 +166,35 @@ export default function Home() {
   async function compartilharStories() {
     localStorage.setItem(nomeKey, nomeCompartilhar || nome);
     localStorage.setItem(instaKey, instagramCompartilhar || instagram);
-    const resposta = await fetch(cardUrl);
-    const blob = await resposta.blob();
-    const arquivo = new File([blob], "desafio-do-asfalto.png", { type: "image/png" });
-    await registrarResultado(true);
+    void registrarResultado(true);
 
-    if (navigator.canShare?.({ files: [arquivo] })) {
-      await navigator.share({
-        title: "Desafio do Asfalto",
-        text: "Acabei de reprovar no desafio do Zé da Graxa. Aposto que você vai pior. Testa aí e me conta.",
-        files: [arquivo]
-      });
+    const janelaFallback = window.open("", "_blank");
+
+    try {
+      const resposta = await fetch(cardUrl);
+      const blob = await resposta.blob();
+      const arquivo = new File([blob], "desafio-do-asfalto.png", { type: "image/png" });
+
+      if (navigator.canShare?.({ files: [arquivo] })) {
+        janelaFallback?.close();
+        await navigator.share({
+          title: "Desafio do Asfalto",
+          text: "Acabei de reprovar no desafio do Zé da Graxa. Aposto que você vai pior. Testa aí e me conta.",
+          files: [arquivo]
+        });
+        return;
+      }
+    } catch {
+      // Cai no fallback abaixo.
+    }
+
+    if (janelaFallback) {
+      janelaFallback.location.href = cardUrl;
       return;
     }
 
     await salvarImagem();
-    alert("Imagem salva. Agora é só postar no Instagram Stories.");
+    alert("Imagem aberta. Salve a imagem e poste no Instagram Stories.");
   }
 
   function abrirCompartilhamento() {
@@ -354,9 +368,15 @@ export default function Home() {
               )}
             </div>
             <div className="grid gap-3">
-              <button onClick={compartilharGrupoWhatsapp} className="rounded-xl bg-emerald-950 px-5 py-4 font-black uppercase text-emerald-50 ring-1 ring-emerald-700">
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={registrarCompartilhamento}
+                className="rounded-xl bg-emerald-950 px-5 py-4 text-center font-black uppercase text-emerald-50 ring-1 ring-emerald-700"
+              >
                 Mandar nos grupos de WhatsApp
-              </button>
+              </a>
               <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
                 Compartilhar no Instagram Stories
               </button>
