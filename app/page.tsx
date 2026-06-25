@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { obterClassificacao, textoWhatsappGrupo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
@@ -21,6 +21,7 @@ function criarSessao(): PerguntaSessao[] {
 }
 
 export default function Home() {
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
   const [tela, setTela] = useState<Tela>("entrada");
   const [nome, setNome] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -46,6 +47,17 @@ export default function Home() {
     const parametros = new URLSearchParams(window.location.search);
     setOrigem(parametros.get("utm_source"));
   }, []);
+
+  useEffect(() => {
+    if (!selecionada) return;
+
+    window.requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+  }, [selecionada]);
 
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
@@ -259,7 +271,7 @@ export default function Home() {
             </div>
 
             {selecionada && (
-              <div className="mt-5 rounded-xl border border-gold/25 bg-black/45 p-4">
+              <div ref={feedbackRef} className="mt-5 rounded-xl border border-gold/25 bg-black/45 p-4">
                 <p className="font-bold text-stone-100">
                   {selecionada === perguntaAtual.correta ? perguntaAtual.textoAcertou : perguntaAtual.textoErrou}
                 </p>
