@@ -179,7 +179,7 @@ export default function Home() {
         janelaFallback?.close();
         await navigator.share({
           title: "Desafio do Asfalto",
-          text: "Acabei de reprovar no desafio do Zé da Graxa. Aposto que você vai pior. Testa aí e me conta.",
+          text: `Fiz o Desafio do Asfalto do Zé da Graxa e tirei ${acertos} de 10. Caí como ${classificacao.id}. Quero ver você tentando também.`,
           files: [arquivo]
         });
         return;

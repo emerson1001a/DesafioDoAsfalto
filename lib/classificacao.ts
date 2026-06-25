@@ -88,5 +88,13 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
 }
 
 export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string) {
-  return `Fiz o Desafio do Asfalto do Zé da Graxa e tirei ${pontuacao} de 10. Caí como ${classificacao}. Quero ver quem aqui manda de verdade na estrada. A maioria não passa. Testa aí: ${url}`;
+  const textos: Record<ClassificacaoId, string> = {
+    "PASSAGEIRO DE CARONA": `😂😂 Tomei um baile no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10. Nem vou comentar. Mas aposto que vocês vão pior — testa aí: ${url}`,
+    "MOTORISTA DE LINHA": `😅 Fiz o Desafio do Asfalto do Zé da Graxa. Fui MOTORISTA DE LINHA — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Quero ver vocês tentando — provavelmente não vão muito melhor não 😏: ${url}`,
+    "QUEBRA-GALHO DA ESTRADA": `😬 Fiz o Desafio do Asfalto do Zé da Graxa e fui QUEBRA-GALHO — ${pontuacao} de 10. Metade acertei, metade chutei 😂 Quero ver quem aqui vai melhor que eu. Testa aí: ${url}`,
+    "VETERANO DO ASFALTO": `💪 Fiz o Desafio do Asfalto do Zé da Graxa — VETERANO DO ASFALTO, ${pontuacao} de 10. Esse quiz é pesado. Duvido alguém aqui bater isso 😏 Testa e me prova o contrário: ${url}`,
+    "DONO DO ASFALTO": `🏆😎 Fiz o Desafio do Asfalto do Zé da Graxa — DONO DO ASFALTO, ${pontuacao} de 10. Para o caminhão e testa aí. Duvido muito vocês chegarem perto 😂: ${url}`
+  };
+
+  return textos[classificacao];
 }
