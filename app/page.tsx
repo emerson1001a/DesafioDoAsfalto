@@ -135,7 +135,7 @@ export default function Home() {
     localStorage.setItem(instaKey, instagramCompartilhar || instagram);
     await registrarResultado(true);
     const url = window.location.origin + window.location.pathname + "?utm_source=whatsapp_grupo";
-    const texto = textoWhatsappGrupo(url);
+    const texto = textoWhatsappGrupo(classificacao.id, acertos, url);
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
   }
 
@@ -194,7 +194,7 @@ export default function Home() {
             <div className="mb-4 inline-flex rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-black uppercase text-gold">
               Quiz do Zé da Graxa
             </div>
-            <h1 className="brand-title text-5xl leading-none text-white">Você acha que manda na estrada?</h1>
+            <h1 className="brand-title text-[2.85rem] leading-none text-white">Você acha que manda na estrada?</h1>
             <p className="mt-4 text-lg font-bold text-stone-300">
               7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?
             </p>
@@ -236,7 +236,7 @@ export default function Home() {
             </div>
 
             <p className="mb-2 text-sm font-black uppercase text-gold">Pergunta {indice + 1} de 10</p>
-            <h2 className="text-2xl font-black leading-tight text-white">{perguntaAtual.pergunta}</h2>
+            <h2 className="text-[1.4rem] font-black leading-tight text-white">{perguntaAtual.pergunta}</h2>
 
             <div className="mt-6 space-y-3">
               {perguntaAtual.alternativasEmbaralhadas.map((alternativa) => {
@@ -276,9 +276,12 @@ export default function Home() {
             <div className="road-card overflow-hidden rounded-2xl">
               <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
                 <p className="text-sm font-black uppercase text-gold">Resultado final</p>
-                <h1 className="brand-title mt-3 text-5xl leading-none text-white">{classificacao.titulo}</h1>
-                <p className="mt-3 text-4xl font-black text-gold">{acertos} de 10</p>
-                <p className="mt-4 text-lg font-bold text-stone-200">{classificacao.texto}</p>
+                <h1 className="brand-title mt-3 text-[2.75rem] leading-none text-white">{classificacao.titulo}</h1>
+                <p className="mt-3 text-[2.15rem] font-black text-gold">{acertos} de 10</p>
+                <p className="mt-4 text-base font-bold text-stone-200">{classificacao.texto}</p>
+                <p className="mt-4 rounded-xl border border-gold/25 bg-black/35 p-3 text-sm font-bold text-gold">
+                  Inscreva-se no canal @ZedaGraxa.oficial para não perder os próximos quizzes.
+                </p>
               </div>
               <div className="grid gap-3 p-5">
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">

@@ -87,6 +87,6 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
   return textos[classificacao];
 }
 
-export function textoWhatsappGrupo(url: string) {
-  return `Zé da Graxa lançou um desafio pra ver quem manda de verdade na estrada. 10 perguntas técnicas - a maioria dos motoristas não passa. Quero ver quem aqui é o verdadeiro Dono do Asfalto: ${url}`;
+export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string) {
+  return `Fiz o Desafio do Asfalto do Zé da Graxa e tirei ${pontuacao} de 10. Caí como ${classificacao}. Quero ver quem aqui manda de verdade na estrada. A maioria não passa. Testa aí: ${url}`;
 }
