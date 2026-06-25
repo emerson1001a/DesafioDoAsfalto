@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=representation"
+        Prefer: "return=minimal"
       },
       body: JSON.stringify(payload)
     });
@@ -52,8 +52,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
     }
 
-    const registro = await resposta.json().catch(() => []);
-    return NextResponse.json({ ok: true, id: Array.isArray(registro) ? registro[0]?.id : undefined });
+    return NextResponse.json({ ok: true, id: id || null });
   } catch {
     return NextResponse.json({ ok: false, erro: "Nao foi possivel registrar" }, { status: 500 });
   }

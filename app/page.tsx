@@ -33,6 +33,7 @@ export default function Home() {
   const [tentativa, setTentativa] = useState(1);
   const [registrando, setRegistrando] = useState(false);
   const [registroOk, setRegistroOk] = useState<boolean | null>(null);
+  const [erroRegistro, setErroRegistro] = useState("");
   const [resultadoId, setResultadoId] = useState<string | null>(null);
   const [incluirInstagram, setIncluirInstagram] = useState(false);
   const [modal, setModal] = useState(false);
@@ -64,6 +65,7 @@ export default function Home() {
     setAcertos(0);
     setErros([]);
     setRegistroOk(null);
+    setErroRegistro("");
     setResultadoId(null);
     setTela("quiz");
   }
@@ -104,8 +106,12 @@ export default function Home() {
       if (resposta.ok && dados.id) {
         setResultadoId(dados.id);
       }
+      if (!resposta.ok) {
+        setErroRegistro(dados.erro || "Erro sem detalhe");
+      }
     } catch {
       setRegistroOk(false);
+      setErroRegistro("Falha de conexao com a API");
     } finally {
       setRegistrando(false);
     }
@@ -324,6 +330,7 @@ export default function Home() {
             {registroOk === false && (
               <p className="rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">
                 Resultado exibido, mas ainda nao consegui gravar as estatisticas no banco.
+                {erroRegistro ? ` Detalhe: ${erroRegistro.slice(0, 180)}` : ""}
               </p>
             )}
           </section>
