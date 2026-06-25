@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { obterClassificacao, textoWhatsapp } from "@/lib/classificacao";
+import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
 import { montarPayloadResultado } from "@/lib/resultado";
@@ -141,6 +141,15 @@ export default function Home() {
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
   }
 
+  async function compartilharGrupoWhatsapp() {
+    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
+    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
+    await registrarResultado(true);
+    const url = window.location.origin + window.location.pathname + "?utm_source=whatsapp_grupo";
+    const texto = textoWhatsappGrupo(url);
+    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
+  }
+
   async function copiarLink() {
     await registrarResultado(true);
     await navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?utm_source=stories`);
@@ -170,7 +179,7 @@ export default function Home() {
     if (navigator.canShare?.({ files: [arquivo] })) {
       await navigator.share({
         title: "Desafio do Asfalto",
-        text: "Fiz o Desafio do Asfalto do Ze da Graxa. Testa ai.",
+        text: "Acabei de reprovar no desafio do Ze da Graxa. Aposto que voce vai pior. Testa ai e me conta.",
         files: [arquivo]
       });
       return;
@@ -205,7 +214,7 @@ export default function Home() {
             </div>
             <h1 className="brand-title text-5xl leading-none text-white">Voce acha que manda na estrada?</h1>
             <p className="mt-4 text-lg font-bold text-stone-300">
-              10 perguntas que ja derrubaram muito motorista experiente. Testa ai.
+              7 em cada 10 caminhoneiros erram pelo menos 3. Voce e o que passa?
             </p>
 
             <div className="mt-7 space-y-4">
@@ -350,6 +359,9 @@ export default function Home() {
             <div className="grid gap-3">
               <button onClick={compartilharWhatsapp} className="rounded-xl bg-diesel px-5 py-4 font-black uppercase">
                 Compartilhar no WhatsApp
+              </button>
+              <button onClick={compartilharGrupoWhatsapp} className="rounded-xl bg-emerald-950 px-5 py-4 font-black uppercase text-emerald-50 ring-1 ring-emerald-700">
+                Mandar no grupo do trabalho
               </button>
               <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
                 Compartilhar no Instagram Stories

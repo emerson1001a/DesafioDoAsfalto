@@ -23,8 +23,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Freio de motor com defeito" }
     ],
     correta: "B",
-    textoAcertou: "Isso ai! Caminhao usa freio pneumatico, meu irmao. Freio mole e sinal de ar no sistema - ou vazamento, ou falha na pressurizacao. Quem respondeu pastilha ta pensando em carro de passeio. Aqui e outra conversa.",
-    textoErrou: "Atencao: em caminhao pesado o freio e pneumatico. Pastilha desgastada faz barulho e aumenta a distancia de frenagem - mas nao amolece o pedal. Pedal mole e ar no sistema. Isso e diferenca que pode salvar vida."
+    textoAcertou: "Isso ai! Caminhao e freio pneumatico, nao hidraulico. Pedal mole e ar no sistema - vazamento ou falha na pressurizacao. Quem foi la na pastilha ta confundindo caminhao com Corsa. Aqui a conversa e outra, meu parceiro.",
+    textoErrou: "Caminhao pesado usa freio pneumatico - nao hidraulico. Pastilha desgastada faz barulho e aumenta a distancia de frenagem, mas nao deixa o pedal mole. Pedal mole e ar no circuito. Confundir isso na pista nao e erro de quiz - e risco de acidente."
   },
   {
     id: 2,
@@ -36,8 +36,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Reduzir a marcha e usar o retarder/freio motor como principal, acionando o freio de servico apenas em emergencia" }
     ],
     correta: "D",
-    textoAcertou: "Certo! O freio motor e o retarder sao seus melhores amigos na descida. O freio de servico voce guarda pra emergencia - nao fica segurando nele a descida toda, senao vai perder o freio na hora que mais precisar. Isso nao e teoria, e sobrevivencia.",
-    textoErrou: "Manter o freio de servico acionado em descida longa e receita pra perder o freio por calor - o famoso fading. Usa o freio motor. O freio de servico e reserva, nao ferramenta principal de descida."
+    textoAcertou: "Isso ai, irmao! Freio motor e retarder e o que manda na descida. Freio de servico voce guarda pra emergencia - nao fica segurando a lomba toda nele, senao chega no fundo sem freio. Nao e teoria nao: e o tipo de coisa que ja matou gente.",
+    textoErrou: "Eita... segurou o freio de servico a descida toda? Isso e fading garantido - o freio esquenta, perde a pressao e sumiu. Motorista experiente usa o freio motor e guarda o servico pra emergencia. Volta ao basico, parceiro."
   },
   {
     id: 3,
@@ -49,8 +49,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Carga mal distribuida na carroceria" }
     ],
     correta: "B",
-    textoAcertou: "E isso! Quando o puxao aparece na hora de frear, o culpado quase sempre e o freio atuando mais forte de um lado que do outro. Pneu fora de calibragem puxa o tempo todo - nao so ao frear. Presta atencao nessa diferenca.",
-    textoErrou: "A dica esta no momento do sintoma: o carro puxa ao frear, nao em velocidade normal. Isso aponta pro freio, nao pro pneu nem pra direcao. Freio assimetrico - um lado segurando mais que o outro. Diferenca sutil que muita gente deixa passar."
+    textoAcertou: "Acertou na mosca! Puxao so na hora de frear e freio assimetrico - um lado segurando mais que o outro. Pneu fora de calibragem puxa o tempo todo, nao so ao frear. Detalhe que muita gente ignora ate dar problema de verdade.",
+    textoErrou: "Prestou atencao? O caminhao puxa SO na hora de frear - nao em velocidade normal. Isso e freio, nao pneu nem direcao. Um lado travando mais que o outro. Parece detalhe, mas na pista esse detalhe te coloca no barranco."
   },
   {
     id: 4,
@@ -62,8 +62,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "17 toneladas" }
     ],
     correta: "B",
-    textoAcertou: "Certo! Eixo simples de rodagem dupla: 10 toneladas. Decorou? Porque fiscalizacao nao aceita 'eu achei que era mais'. A multa e a apreensao sao bem reais.",
-    textoErrou: "Muita gente confunde: eixo simples de rodagem dupla aguenta 10 toneladas. As 17 toneladas sao do eixo tandem duplo - dois eixos juntos. Sao limites diferentes pra configuracoes diferentes. Conhecer essa diferenca evita multa, apreensao e acidente."
+    textoAcertou: "10 toneladas no eixo simples de rodagem dupla. Certo! Fiscal de balanca nao aceita 'eu achei que era mais, chefe'. A multa e o patio sao bem reais - e saem do seu bolso, nao do bolso do dono da carga.",
+    textoErrou: "10 toneladas no eixo simples de rodagem dupla - nao 17. Esse e o limite do tandem duplo. Confundir na balanca custa caro: multa, retencao e ainda fica parado esperando o dono tirar o excesso. Nem sempre o chefe aparece rapido."
   },
   {
     id: 5,
@@ -75,8 +75,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "A proporcao de aditivo/agua esta errada" }
     ],
     correta: "B",
-    textoAcertou: "Acertou, e esse e o tipo de coisa que quanto mais cedo voce identifica, menos dinheiro voce perde. Agua leitosa com espuma em motor e oleo misturado na agua - e o caminho mais comum e pela junta do cabecote. Nao ignora esse sinal.",
-    textoErrou: "Agua vencida fica amarelada ou enferrujada - nao leitosa. Agua leitosa com espuma significa que oleo entrou no circuito de arrefecimento. Isso quase sempre e junta do cabecote comprometida. Um mecanico que ja viu isso de verdade reconhece na hora."
+    textoAcertou: "Acertou e salvou o motor! Agua leitosa com espuma e oleo no circuito de arrefecimento - quase sempre junta do cabecote. Quanto mais cedo pega, menos dinheiro perde. Ignorar esse sinal e assinar um cheque em branco pra oficina.",
+    textoErrou: "Agua vencida fica amarelada ou enferrujada - nao leitosa e espumosa. Quando esta assim e oleo no circuito. Quase sempre e junta do cabecote. Qualquer mecanico de beira de estrada que ja viu isso reconhece na hora. Voce ainda ia rodar com isso?"
   },
   {
     id: 6,
@@ -88,8 +88,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Pneus calibrados acima do recomendado" }
     ],
     correta: "D",
-    textoAcertou: "Pegou a virada! Pneu com pressao alta reduz atrito com o asfalto - o consumo cai, nao aumenta. Essa pergunta foi pra ver se voce leu com atencao. Na estrada e na mecanica, detalhe faz diferenca.",
-    textoErrou: "A armadilha foi a palavra 'menos'. Pneu com pressao acima do normal diminui o consumo - nao aumenta. As outras tres opcoes sao causas reais de consumo alto. Leitura atenta e parte do trabalho de quem manda na estrada."
+    textoAcertou: "Boa, voce leu a pergunta ate o fim! Pneu com pressao alta reduz o atrito - consumo cai, nao sobe. Era pegadinha de atencao. Quem acertou essa e porque le o contrato antes de assinar. Raro nas estradas.",
+    textoErrou: "Cuidado com a palavra 'menos'! Pneu calibrado acima do normal diminui o consumo - nao aumenta. As outras tres sao causas reais. Pegadinha de leitura. Na estrada, quem nao le o aviso so ve o buraco depois que cai."
   },
   {
     id: 7,
@@ -101,8 +101,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Acionar o freio de mao e engatar a primeira marcha, com a frente voltada para qualquer direcao" }
     ],
     correta: "C",
-    textoAcertou: "Correto! Frente pra subida, primeira marcha engajada. O motor trava no sentido que o veiculo tenderia a descer. E simples, mas tem gente que deixa em ponto morto com freio de mao e vai dormir. Num caminhao carregado, isso e roleta-russa.",
-    textoErrou: "Nunca deixa caminhao carregado so no freio de mao. O cambio em primeira com a frente pra subida usa a compressao do motor como trava extra. Parece detalhe - mas e o detalhe que evita que o caminhao desca sozinho enquanto voce dorme."
+    textoAcertou: "Certinho! Frente pra subida, primeira marcha engatada. O motor trava no sentido que o veiculo tenderia a descer. Parece besteira, mas tem gente que deixa em ponto morto com o freio de mao e vai dormir. Num caminhao carregado, isso e roleta-russa de verdade.",
+    textoErrou: "Nunca confia so no freio de mao num caminhao carregado. Primeira marcha engatada com a frente pra subida - a compressao do motor e sua segunda trava. Parece frescura. Nao e. O caminhao que desceu sozinho enquanto o motorista dormia nao avisou antes de sair."
   },
   {
     id: 8,
@@ -114,8 +114,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Puxar o freio de estacionamento para segurar o reboque" }
     ],
     correta: "C",
-    textoAcertou: "Isso! Contra-intuicao pura. O instinto manda frear - mas frear bruscamente num conjunto sambando e quase garantia de tombamento. Solta o gas devagar, mantem o volante reto e deixa o veiculo se estabilizar. Quem nunca viveu isso na pratica acha que e facil. Nao e.",
-    textoErrou: "Quando o reboque samba, frear ou estercar bruscamente aumenta a oscilacao e pode virar o conjunto. A resposta correta parece errada - mas e a unica que funciona: soltar o gas com calma e segurar o volante reto ate estabilizar. Vale memorizar isso."
+    textoAcertou: "Isso! Contra-intuicao na veia. Todo instinto grita 'freia!' - mas frear bruscamente num conjunto sambando e convite pro tombamento. Solta o gas com calma, volante firme e reto, e deixa o bicho se acomodar. Quem nunca passou por isso acha que e facil. Nao e, nao.",
+    textoErrou: "Frear forte com reboque sambando e pedir pro conjunto tombar. A fisica nao negocia. Solta o gas devagar, segura o volante reto e espera o bicho se acalmar. Cada volantazo que voce da pra 'corrigir' e mais descontrole. Menos e mais, nessa hora."
   },
   {
     id: 9,
@@ -127,8 +127,8 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "O tipo de oleo usado e incompativel com o diferencial" }
     ],
     correta: "B",
-    textoAcertou: "Diagnostico certo. Oleo escuro e com cheiro de queimado no diferencial e estresse termico acumulado. Ou o nivel estava baixo, ou o diferencial bloqueado ficou acionado por tempo demais. Troca o oleo e investiga a causa - nao so o sintoma.",
-    textoErrou: "Oleo simplesmente vencido fica escuro mas nao tem cheiro de queimado. O cheiro entrega: esse diferencial trabalhou quente demais. Nivel baixo ou bloqueio mal usado sao os suspeitos principais. Nao adianta trocar so o oleo sem entender por que queimou."
+    textoAcertou: "Diagnostico certeiro! Oleo escuro com cheiro de queimado e diferencial trabalhando quente demais - nivel baixo ou bloqueio acionado por tempo demais. Trocar o oleo resolve o sintoma. Entender por que queimou e o que separa o motorista do mecanico de estrada.",
+    textoErrou: "Oleo vencido fica escuro, mas nao tem cheiro de queimado. O cheiro e o que entrega: esse diferencial cozinhou por dentro. Nivel baixo ou bloqueio mal usado. Trocar o oleo sem saber o por que e so adiar o problema - e a conta fica maior depois."
   },
   {
     id: 10,
@@ -140,7 +140,7 @@ export const perguntas: Pergunta[] = [
       { id: "D", texto: "Desligar o ar-condicionado, acelerar para aumentar a rotacao do motor e forcar a circulacao de agua" }
     ],
     correta: "B",
-    textoAcertou: "Veterano! Essa pegou muita gente. O detalhe do aquecedor e o que separa quem estudou de quem so acha que sabe: ligar o aquecedor da cabine no maximo usa o calor do motor como dissipador extra. Pequeno detalhe, grande diferenca. E nunca abre o radiador quente - nunca.",
-    textoErrou: "Abre o radiador com motor quente e voce leva uma explosao de vapor na cara - isso acontece de verdade. E continuar rodando e destruir o motor. O certo e: reduz a velocidade, liga o aquecedor da cabine no maximo pra ajudar a dissipar calor, para em lugar seguro, desliga e espera esfriar. So depois abre."
+    textoAcertou: "Veterano de verdade! O truque do aquecedor no maximo e o que separa quem aprendeu na pratica de quem so acha que sabe. Usa o calor do motor como dissipador extra - funciona. E nunca, NUNCA abre o radiador quente. Isso nao e conselho, e lei da fisica.",
+    textoErrou: "Abrir o radiador com motor quente e garantia de explosao de vapor na cara. Acontece de verdade e deixa marca. Continuar rodando destroca o motor. Certo: reduz a velocidade, liga o aquecedor no talo e acha um lugar seguro. Depois espera. Pressa aqui sai caro."
   }
 ];

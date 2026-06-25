@@ -20,8 +20,8 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     return {
       id: "DONO DO ASFALTO",
       titulo: "DONO DO ASFALTO",
-      texto: "Parabens. Voce e do tipo que a estrada respeita. Compartilha - voce merece mostrar isso.",
-      tom: "Conquista total",
+      texto: "Esse nivel nao e sorte - e conhecimento de quem rodou de verdade. A estrada te respeita. Agora compartilha e deixa seus colegas tentarem chegar perto. Spoiler: a maioria nao vai.",
+      tom: "Dono da pista",
       cor: "#f5b51b",
       fundo: "sunset",
       prioridadeTentarDeNovo: false
@@ -32,8 +32,8 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     return {
       id: "VETERANO DO ASFALTO",
       titulo: "VETERANO DO ASFALTO",
-      texto: "Voce rodou muito e aprendeu de verdade. A estrada te respeita. Manda pro seu parceiro ver se ele chega perto.",
-      tom: "Confianca",
+      texto: "Voce rodou muito e aprendeu de verdade. Conhecimento na veia, nao so na teoria. Agora manda pro seu parceiro - quero ver ele chegar perto de voce.",
+      tom: "Rodou de verdade",
       cor: "#2fc47d",
       fundo: "cabine",
       prioridadeTentarDeNovo: false
@@ -44,8 +44,8 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     return {
       id: "QUEBRA-GALHO DA ESTRADA",
       titulo: "QUEBRA-GALHO DA ESTRADA",
-      texto: "Voce resolve no improviso e sai bem da maioria das situacoes. Mas a estrada ainda guarda uns segredos de voce. Tenta de novo - ou manda pro amigo ver se ele vai melhor.",
-      tom: "Quase la",
+      texto: "Metade acerta, metade chuta. Na pratica voce se vira - mas na teoria ainda tem buraco. Nao e desonra, nao. Mas seus colegas nao precisam saber disso. A menos que voce queira testar se eles sao piores que voce...",
+      tom: "Metade la, metade ca",
       cor: "#4da3ff",
       fundo: "oficina",
       prioridadeTentarDeNovo: false
@@ -56,8 +56,8 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     return {
       id: "MOTORISTA DE LINHA",
       titulo: "MOTORISTA DE LINHA",
-      texto: "Voce chegou ate aqui - mas a estrada ainda tem muita coisa pra te ensinar, parceiro. Boa noticia: voce nao precisa ficar assim nao.",
-      tom: "Sem humilhar",
+      texto: "Passou do basico, mas a estrada ainda tem muita coisa escondida de voce. Boa noticia: da pra melhorar. Ma noticia: seus colegas provavelmente sabem mais que voce. Manda pra eles verem.",
+      tom: "Ainda aprendendo",
       cor: "#f28c28",
       fundo: "cidade",
       prioridadeTentarDeNovo: true
@@ -67,8 +67,8 @@ export function obterClassificacao(pontuacao: number): Classificacao {
   return {
     id: "PASSAGEIRO DE CARONA",
     titulo: "PASSAGEIRO DE CARONA",
-    texto: "Tranquilo. Cada um comeca de algum lugar. ...Mas esse lugar ta bem longe do volante. O Ze acredita em voce. Tenta de novo.",
-    tom: "Bem humorado",
+    texto: "Hm. Bem... todo mundo comeca de algum lugar. O problema e que esse lugar ta bem longe do volante. O Ze nao vai te julgar - mas seus colegas vao. Tenta de novo antes de mostrar isso pra alguem.",
+    tom: "Vai treinar mais",
     cor: "#f5d94a",
     fundo: "passageiro",
     prioridadeTentarDeNovo: true
@@ -77,12 +77,16 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
 export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string) {
   const textos: Record<ClassificacaoId, string> = {
-    "DONO DO ASFALTO": `Fiz o Desafio do Asfalto la do Ze da Graxa e tirei DONO DO ASFALTO - ${pontuacao} de 10. Duvido voce chegar perto. Testa aqui: ${url}`,
-    "VETERANO DO ASFALTO": `Fiz o Desafio do Asfalto do Ze da Graxa e passei como VETERANO - ${pontuacao} de 10. Manda ver, ve se voce aguenta: ${url}`,
-    "QUEBRA-GALHO DA ESTRADA": `Fiz o desafio do Ze da Graxa. Fui Quebra-Galho, mas algumas pegaram ate mim. Vamos ver como voce vai: ${url}`,
-    "MOTORISTA DE LINHA": `Esse desafio do Ze da Graxa e pesado. Me pegou em algumas. Testa voce ai e me conta: ${url}`,
-    "PASSAGEIRO DE CARONA": `Fiz o Desafio do Asfalto do Ze da Graxa... fui Passageiro de Carona. Nao vou nem explicar. Testa voce: ${url}`
+    "DONO DO ASFALTO": `Fiz o Desafio do Asfalto do Ze da Graxa e tirei DONO DO ASFALTO - ${pontuacao} de 10. Para o caminhao e testa voce - duvido muito voce chegar perto: ${url}`,
+    "VETERANO DO ASFALTO": `Fiz o Desafio do Asfalto do Ze da Graxa - VETERANO DO ASFALTO, ${pontuacao} de 10. Duvido voce chegar no mesmo nivel. Testa ai se tiver coragem: ${url}`,
+    "QUEBRA-GALHO DA ESTRADA": `Fiz o Desafio do Asfalto do Ze da Graxa e fui QUEBRA-GALHO DA ESTRADA - ${pontuacao} de 10. Algumas me pegaram, vou admitir. Sinceramente acho que voce vai pior. Me prova o contrario: ${url}`,
+    "MOTORISTA DE LINHA": `Fiz o Desafio do Asfalto do Ze da Graxa e fui MOTORISTA DE LINHA - ${pontuacao} de 10. Pesado demais esse quiz. Quero ver voce passar disso - testa aqui: ${url}`,
+    "PASSAGEIRO DE CARONA": `Acabei de reprovar no Desafio do Asfalto do Ze da Graxa - ${pontuacao} de 10. Nem vou falar minha nota. Mas aposto que voce vai pior - prova ai: ${url}`
   };
 
   return textos[classificacao];
+}
+
+export function textoWhatsappGrupo(url: string) {
+  return `Ze da Graxa lancou um desafio pra ver quem manda de verdade na estrada. 10 perguntas tecnicas - a maioria dos motoristas nao passa. Quero ver quem aqui e o verdadeiro Dono do Asfalto: ${url}`;
 }
