@@ -37,7 +37,6 @@ export default function Home() {
   const [resultadoId, setResultadoId] = useState<string | null>(null);
   const [incluirInstagram, setIncluirInstagram] = useState(false);
   const [modal, setModal] = useState(false);
-  const [copiado, setCopiado] = useState(false);
   const [nomeCompartilhar, setNomeCompartilhar] = useState("");
   const [instagramCompartilhar, setInstagramCompartilhar] = useState("");
 
@@ -50,7 +49,7 @@ export default function Home() {
 
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
-  const nomeCard = nomeCompartilhar.trim() || nome.trim() || "Voce";
+  const nomeCard = nomeCompartilhar.trim() || nome.trim() || "Você";
   const instagramLimpo = instagramCompartilhar.trim() || instagram.trim();
   const instagramCard = incluirInstagram && instagramLimpo ? (instagramLimpo.startsWith("@") ? instagramLimpo : `@${instagramLimpo}`) : "";
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
@@ -70,7 +69,6 @@ export default function Home() {
     setErroRegistro("");
     setResultadoId(null);
     setModal(false);
-    setCopiado(false);
     setTela("quiz");
   }
 
@@ -115,7 +113,7 @@ export default function Home() {
       }
     } catch {
       setRegistroOk(false);
-      setErroRegistro("Falha de conexao com a API");
+      setErroRegistro("Falha de conexão com a API");
     } finally {
       setRegistrando(false);
     }
@@ -150,13 +148,6 @@ export default function Home() {
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
   }
 
-  async function copiarLink() {
-    await registrarResultado(true);
-    await navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?utm_source=stories`);
-    setCopiado(true);
-    setTimeout(() => setCopiado(false), 1800);
-  }
-
   async function salvarImagem() {
     const resposta = await fetch(cardUrl);
     const blob = await resposta.blob();
@@ -179,14 +170,14 @@ export default function Home() {
     if (navigator.canShare?.({ files: [arquivo] })) {
       await navigator.share({
         title: "Desafio do Asfalto",
-        text: "Acabei de reprovar no desafio do Ze da Graxa. Aposto que voce vai pior. Testa ai e me conta.",
+        text: "Acabei de reprovar no desafio do Zé da Graxa. Aposto que você vai pior. Testa aí e me conta.",
         files: [arquivo]
       });
       return;
     }
 
     await salvarImagem();
-    alert("Imagem salva. Agora e so postar no Instagram Stories.");
+    alert("Imagem salva. Agora é só postar no Instagram Stories.");
   }
 
   function abrirCompartilhamento() {
@@ -210,11 +201,11 @@ export default function Home() {
         {tela === "entrada" && (
           <section className="road-card rounded-2xl p-5">
             <div className="mb-4 inline-flex rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-black uppercase text-gold">
-              Quiz do Ze da Graxa
+              Quiz do Zé da Graxa
             </div>
-            <h1 className="brand-title text-5xl leading-none text-white">Voce acha que manda na estrada?</h1>
+            <h1 className="brand-title text-5xl leading-none text-white">Você acha que manda na estrada?</h1>
             <p className="mt-4 text-lg font-bold text-stone-300">
-              7 em cada 10 caminhoneiros erram pelo menos 3. Voce e o que passa?
+              7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?
             </p>
 
             <div className="mt-7 space-y-4">
@@ -224,7 +215,7 @@ export default function Home() {
                   value={nome}
                   onChange={(event) => setNome(event.target.value)}
                   className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-4 text-lg outline-none focus:border-gold"
-                  placeholder="Ex.: Ze"
+                  placeholder="Ex.: Zé"
                 />
               </label>
               <label className="block">
@@ -282,7 +273,7 @@ export default function Home() {
                   {selecionada === perguntaAtual.correta ? perguntaAtual.textoAcertou : perguntaAtual.textoErrou}
                 </p>
                 <button onClick={proxima} className="mt-5 w-full rounded-xl bg-gold px-5 py-4 text-lg font-black uppercase text-black">
-                  {indice === sessao.length - 1 ? "Ver resultado" : "Proxima"}
+                  {indice === sessao.length - 1 ? "Ver resultado" : "Próxima"}
                 </button>
               </div>
             )}
@@ -310,7 +301,7 @@ export default function Home() {
 
             {registroOk === false && (
               <p className="rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">
-                Resultado exibido, mas ainda nao consegui gravar as estatisticas no banco.
+                Resultado exibido, mas ainda não consegui gravar as estatísticas no banco.
                 {erroRegistro ? ` Detalhe: ${erroRegistro.slice(0, 180)}` : ""}
               </p>
             )}
@@ -335,7 +326,7 @@ export default function Home() {
                   value={nomeCompartilhar}
                   onChange={(event) => setNomeCompartilhar(event.target.value)}
                   className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                  placeholder="Voce"
+                  placeholder="Você"
                 />
               </label>
               <label className="mt-3 flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-950/70 p-3">
@@ -365,12 +356,6 @@ export default function Home() {
               </button>
               <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
                 Compartilhar no Instagram Stories
-              </button>
-              <button onClick={copiarLink} className="rounded-xl bg-stone-800 px-5 py-4 font-black uppercase">
-                {copiado ? "Link copiado!" : "Copiar link do desafio"}
-              </button>
-              <button onClick={salvarImagem} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
-                Salvar imagem do resultado
               </button>
             </div>
           </div>

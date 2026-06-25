@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Desafio do Asfalto",
-  description: "7 em cada 10 caminhoneiros erram pelo menos 3. Voce e o que passa?",
+  description: "7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?",
   openGraph: {
     title: "Desafio do Asfalto",
-    description: "Voce acha que manda na estrada? Testa ai.",
+    description: "Você acha que manda na estrada? Testa aí.",
     type: "website"
   }
 };

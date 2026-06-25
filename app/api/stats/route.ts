@@ -12,7 +12,7 @@ type Resultado = {
 
 export async function GET() {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return NextResponse.json({ ok: false, erro: "Supabase nao configurado" }, { status: 500 });
+    return NextResponse.json({ ok: false, erro: "Supabase não configurado" }, { status: 500 });
   }
 
   const resposta = await fetch(

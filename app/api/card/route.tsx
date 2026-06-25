@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const nome = searchParams.get("nome")?.slice(0, 32) || "Voce";
+  const nome = searchParams.get("nome")?.slice(0, 32) || "Você";
   const instagram = searchParams.get("instagram")?.slice(0, 32) || "";
   const pontuacao = Math.max(0, Math.min(10, Number(searchParams.get("score") || 0)));
   const classificacao = obterClassificacao(pontuacao);
@@ -124,7 +124,7 @@ export async function GET(request: NextRequest) {
               borderRadius: "16px"
             }}
           >
-            TESTA AI
+            TESTA AÍ
           </div>
         </div>
       </div>

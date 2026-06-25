@@ -15,11 +15,11 @@ export async function POST(request: NextRequest) {
       : [];
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
-      return NextResponse.json({ ok: false, erro: "Supabase nao configurado" }, { status: 500 });
+      return NextResponse.json({ ok: false, erro: "Supabase não configurado" }, { status: 500 });
     }
 
     if (!Number.isInteger(pontuacao) || pontuacao < 0 || pontuacao > 10) {
-      return NextResponse.json({ ok: false, erro: "Pontuacao invalida" }, { status: 400 });
+      return NextResponse.json({ ok: false, erro: "Pontuação inválida" }, { status: 400 });
     }
 
     const id = typeof body.id === "string" ? body.id : null;
@@ -54,6 +54,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, id: id || null });
   } catch {
-    return NextResponse.json({ ok: false, erro: "Nao foi possivel registrar" }, { status: 500 });
+    return NextResponse.json({ ok: false, erro: "Não foi possível registrar" }, { status: 500 });
   }
 }
