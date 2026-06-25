@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo } from "@/lib/classificacao";
+import { obterClassificacao, textoWhatsappGrupo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
 import { montarPayloadResultado } from "@/lib/resultado";
@@ -128,15 +128,6 @@ export default function Home() {
 
     setTela("resultado");
     setTimeout(() => registrarResultado(false), 0);
-  }
-
-  async function compartilharWhatsapp() {
-    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
-    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
-    await registrarResultado(true);
-    const url = window.location.origin + window.location.pathname + "?utm_source=whatsapp";
-    const texto = textoWhatsapp(classificacao.id, acertos, url);
-    window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank", "noopener,noreferrer");
   }
 
   async function compartilharGrupoWhatsapp() {
@@ -348,11 +339,8 @@ export default function Home() {
               )}
             </div>
             <div className="grid gap-3">
-              <button onClick={compartilharWhatsapp} className="rounded-xl bg-diesel px-5 py-4 font-black uppercase">
-                Compartilhar no WhatsApp
-              </button>
               <button onClick={compartilharGrupoWhatsapp} className="rounded-xl bg-emerald-950 px-5 py-4 font-black uppercase text-emerald-50 ring-1 ring-emerald-700">
-                Mandar no grupo do trabalho
+                Mandar nos grupos de WhatsApp
               </button>
               <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
                 Compartilhar no Instagram Stories
