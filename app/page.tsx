@@ -38,6 +38,8 @@ export default function Home() {
   const [incluirInstagram, setIncluirInstagram] = useState(false);
   const [modal, setModal] = useState(false);
   const [copiado, setCopiado] = useState(false);
+  const [nomeCompartilhar, setNomeCompartilhar] = useState("");
+  const [instagramCompartilhar, setInstagramCompartilhar] = useState("");
 
   useEffect(() => {
     setNome(localStorage.getItem(nomeKey) || "");
@@ -48,8 +50,8 @@ export default function Home() {
 
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
-  const nomeCard = nome.trim() || "Voce";
-  const instagramLimpo = instagram.trim();
+  const nomeCard = nomeCompartilhar.trim() || nome.trim() || "Voce";
+  const instagramLimpo = instagramCompartilhar.trim() || instagram.trim();
   const instagramCard = incluirInstagram && instagramLimpo ? (instagramLimpo.startsWith("@") ? instagramLimpo : `@${instagramLimpo}`) : "";
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
 
@@ -67,6 +69,8 @@ export default function Home() {
     setRegistroOk(null);
     setErroRegistro("");
     setResultadoId(null);
+    setModal(false);
+    setCopiado(false);
     setTela("quiz");
   }
 
@@ -129,6 +133,8 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp() {
+    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
+    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
     await registrarResultado(true);
     const url = window.location.origin + window.location.pathname + "?utm_source=whatsapp";
     const texto = textoWhatsapp(classificacao.id, acertos, url);
@@ -154,6 +160,8 @@ export default function Home() {
   }
 
   async function compartilharStories() {
+    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
+    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
     const resposta = await fetch(cardUrl);
     const blob = await resposta.blob();
     const arquivo = new File([blob], "desafio-do-asfalto.png", { type: "image/png" });
@@ -170,6 +178,13 @@ export default function Home() {
 
     await salvarImagem();
     alert("Imagem salva. Agora e so postar no Instagram Stories.");
+  }
+
+  function abrirCompartilhamento() {
+    setNomeCompartilhar(nome);
+    setInstagramCompartilhar(instagram);
+    setIncluirInstagram(false);
+    setModal(true);
   }
 
   return (
@@ -267,64 +282,21 @@ export default function Home() {
 
         {tela === "resultado" && (
           <section className="space-y-4">
-            <div className="road-card rounded-2xl p-5">
-              <p className="text-sm font-black uppercase text-gold">Resultado final</p>
-              <h1 className="brand-title mt-2 text-5xl leading-none text-white">{classificacao.titulo}</h1>
-              <p className="mt-2 text-3xl font-black text-gold">{acertos} de 10 acertos</p>
-              <p className="mt-4 text-lg font-bold text-stone-300">{classificacao.texto}</p>
-
-              <div className="mt-5 rounded-xl border border-stone-700 bg-black/35 p-4">
-                <p className="font-black">Quer incluir seu @ do Instagram no card?</p>
-                {incluirInstagram && !instagram.trim() && (
-                  <input
-                    value={instagram}
-                    onChange={(event) => setInstagram(event.target.value)}
-                    className="mt-3 w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                    placeholder="@seuperfil"
-                  />
-                )}
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <button onClick={() => setIncluirInstagram(true)} className="rounded-xl bg-diesel px-3 py-3 text-sm font-black">
-                    Sim, quero aparecer
-                  </button>
-                  <button onClick={() => setIncluirInstagram(false)} className="rounded-xl bg-stone-800 px-3 py-3 text-sm font-black">
-                    So o resultado
-                  </button>
-                </div>
+            <div className="road-card overflow-hidden rounded-2xl">
+              <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
+                <p className="text-sm font-black uppercase text-gold">Resultado final</p>
+                <h1 className="brand-title mt-3 text-5xl leading-none text-white">{classificacao.titulo}</h1>
+                <p className="mt-3 text-4xl font-black text-gold">{acertos} de 10</p>
+                <p className="mt-4 text-lg font-bold text-stone-200">{classificacao.texto}</p>
               </div>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-gold/30 bg-black shadow-hard">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cardUrl} alt="Card do resultado" className="w-full" />
-            </div>
-
-            <div className="grid gap-3">
-              {classificacao.prioridadeTentarDeNovo ? (
-                <>
-                  <button onClick={iniciar} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
-                    Tentar de novo - dessa vez com mais calma
-                  </button>
-                  <button onClick={() => setModal(true)} className="rounded-xl bg-stone-800 px-5 py-4 font-black uppercase">
-                    Compartilhar assim mesmo
-                  </button>
-                  <button onClick={salvarImagem} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
-                    Salvar como imagem
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button onClick={() => setModal(true)} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
-                    Compartilhar meu resultado
-                  </button>
-                  <button onClick={salvarImagem} className="rounded-xl bg-stone-800 px-5 py-4 font-black uppercase">
-                    Salvar como imagem
-                  </button>
-                  <button onClick={iniciar} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
-                    Tentar de novo
-                  </button>
-                </>
-              )}
+              <div className="grid gap-3 p-5">
+                <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
+                  Compartilhar resultado
+                </button>
+                <button onClick={iniciar} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
+                  Tentar de novo
+                </button>
+              </div>
             </div>
 
             {registroOk === false && (
@@ -343,8 +315,37 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-end bg-black/75 p-4">
           <div className="mx-auto w-full max-w-md rounded-2xl border border-gold/30 bg-coal p-5 shadow-hard">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-black">Compartilhar o desafio</h2>
+              <h2 className="text-xl font-black">Compartilhar resultado</h2>
               <button onClick={() => setModal(false)} className="rounded-lg bg-stone-800 px-3 py-2 font-black">X</button>
+            </div>
+            <div className="mb-4 rounded-xl border border-stone-700 bg-black/35 p-4">
+              <p className="mb-3 text-sm font-bold text-stone-300">Quer personalizar o card antes de mandar?</p>
+              <label className="block">
+                <span className="mb-1 block text-xs font-black uppercase text-stone-400">Nome no card</span>
+                <input
+                  value={nomeCompartilhar}
+                  onChange={(event) => setNomeCompartilhar(event.target.value)}
+                  className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                  placeholder="Voce"
+                />
+              </label>
+              <label className="mt-3 flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-950/70 p-3">
+                <input
+                  type="checkbox"
+                  checked={incluirInstagram}
+                  onChange={(event) => setIncluirInstagram(event.target.checked)}
+                  className="h-5 w-5 accent-yellow-500"
+                />
+                <span className="text-sm font-bold">Colocar meu @ do Instagram no card</span>
+              </label>
+              {incluirInstagram && (
+                <input
+                  value={instagramCompartilhar}
+                  onChange={(event) => setInstagramCompartilhar(event.target.value)}
+                  className="mt-3 w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                  placeholder="@seuperfil"
+                />
+              )}
             </div>
             <div className="grid gap-3">
               <button onClick={compartilharWhatsapp} className="rounded-xl bg-diesel px-5 py-4 font-black uppercase">
@@ -355,6 +356,9 @@ export default function Home() {
               </button>
               <button onClick={copiarLink} className="rounded-xl bg-stone-800 px-5 py-4 font-black uppercase">
                 {copiado ? "Link copiado!" : "Copiar link do desafio"}
+              </button>
+              <button onClick={salvarImagem} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
+                Salvar imagem do resultado
               </button>
             </div>
           </div>
