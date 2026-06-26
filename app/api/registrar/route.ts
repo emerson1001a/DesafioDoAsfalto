@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
       compartilhou: Boolean(body.compartilhou),
       origem: typeof body.origem === "string" ? body.origem.slice(0, 80) : null,
       tentativa_numero: Number.isInteger(tentativa) && tentativa > 0 ? tentativa : 1,
-      erros
+      erros,
+      sorteio_participa: Boolean(body.sorteio_participa),
+      sorteio_nome: typeof body.sorteio_nome === "string" ? body.sorteio_nome.slice(0, 120) : null,
+      sorteio_telefone: typeof body.sorteio_telefone === "string" ? body.sorteio_telefone.slice(0, 40) : null
     };
 
     const url = id
@@ -42,7 +45,7 @@ export async function POST(request: NextRequest) {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=minimal"
+        Prefer: "return=representation"
       },
       body: JSON.stringify(payload)
     });
@@ -52,7 +55,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true, id: id || null });
+    const dados = await resposta.json().catch(() => []);
+    const registro = Array.isArray(dados) ? dados[0] : dados;
+
+    return NextResponse.json({ ok: true, id: id || registro?.id || null });
   } catch {
     return NextResponse.json({ ok: false, erro: "Não foi possível registrar" }, { status: 500 });
   }

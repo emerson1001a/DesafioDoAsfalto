@@ -8,8 +8,16 @@ create table if not exists public.resultados_do_quiz (
   compartilhou boolean not null default false,
   origem text,
   tentativa_numero integer not null default 1,
-  erros jsonb not null default '[]'::jsonb
+  erros jsonb not null default '[]'::jsonb,
+  sorteio_participa boolean not null default false,
+  sorteio_nome text,
+  sorteio_telefone text
 );
+
+alter table public.resultados_do_quiz
+  add column if not exists sorteio_participa boolean not null default false,
+  add column if not exists sorteio_nome text,
+  add column if not exists sorteio_telefone text;
 
 alter table public.resultados_do_quiz enable row level security;
 

@@ -40,6 +40,11 @@ export default function Home() {
   const [modal, setModal] = useState(false);
   const [nomeCompartilhar, setNomeCompartilhar] = useState("");
   const [instagramCompartilhar, setInstagramCompartilhar] = useState("");
+  const [nomeSorteio, setNomeSorteio] = useState("");
+  const [telefoneSorteio, setTelefoneSorteio] = useState("");
+  const [salvandoSorteio, setSalvandoSorteio] = useState(false);
+  const [sorteioOk, setSorteioOk] = useState(false);
+  const [erroSorteio, setErroSorteio] = useState("");
 
   useEffect(() => {
     setNome(localStorage.getItem(nomeKey) || "");
@@ -84,6 +89,10 @@ export default function Home() {
     setRegistroOk(null);
     setErroRegistro("");
     setResultadoId(null);
+    setSorteioOk(false);
+    setErroSorteio("");
+    setNomeSorteio("");
+    setTelefoneSorteio("");
     setModal(false);
     setTela("quiz");
   }
@@ -99,8 +108,8 @@ export default function Home() {
     }
   }
 
-  async function registrarResultado(compartilhou = false) {
-    if (registrando) return;
+  async function registrarResultado(compartilhou = false, dadosSorteio?: { nome: string; telefone: string }) {
+    if (registrando) return false;
     setRegistrando(true);
     const payload = {
       ...montarPayloadResultado({
@@ -110,6 +119,13 @@ export default function Home() {
       tentativaNumero: tentativa,
       erros
       }),
+      ...(dadosSorteio
+        ? {
+            sorteio_participa: true,
+            sorteio_nome: dadosSorteio.nome,
+            sorteio_telefone: dadosSorteio.telefone
+          }
+        : {}),
       id: resultadoId
     };
 
@@ -127,12 +143,40 @@ export default function Home() {
       if (!resposta.ok) {
         setErroRegistro(dados.erro || "Erro sem detalhe");
       }
+      return resposta.ok;
     } catch {
       setRegistroOk(false);
       setErroRegistro("Falha de conexão com a API");
+      return false;
     } finally {
       setRegistrando(false);
     }
+  }
+
+  async function salvarSorteio() {
+    const nomeLimpo = nomeSorteio.trim();
+    const telefoneLimpo = telefoneSorteio.trim();
+
+    setErroSorteio("");
+
+    if (!nomeLimpo || !telefoneLimpo) {
+      setErroSorteio("Informe nome e telefone para participar do sorteio.");
+      return;
+    }
+
+    setSalvandoSorteio(true);
+    const salvou = await registrarResultado(false, {
+      nome: nomeLimpo,
+      telefone: telefoneLimpo
+    });
+    setSalvandoSorteio(false);
+
+    if (salvou) {
+      setSorteioOk(true);
+      return;
+    }
+
+    setErroSorteio("NÃ£o consegui salvar agora. Tente novamente em alguns segundos.");
   }
 
   function proxima() {
@@ -310,6 +354,55 @@ export default function Home() {
                 </p>
               </div>
               <div className="grid gap-3 p-5">
+                <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
+                  <p className="text-sm font-black uppercase text-gold">Sorteio Pix de R$ 500</p>
+                  <h2 className="mt-2 text-xl font-black text-white">Quer participar?</h2>
+                  <p className="mt-2 text-sm font-bold text-stone-300">
+                    Deixe seu nome e telefone. Se for sorteado, a gente entra em contato por WhatsApp.
+                  </p>
+
+                  <label className="mt-4 block">
+                    <span className="mb-1 block text-xs font-black uppercase text-stone-400">Nome</span>
+                    <input
+                      value={nomeSorteio}
+                      onChange={(event) => setNomeSorteio(event.target.value)}
+                      disabled={sorteioOk || salvandoSorteio}
+                      className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
+                      placeholder="Ex.: Paulo"
+                    />
+                  </label>
+
+                  <label className="mt-3 block">
+                    <span className="mb-1 block text-xs font-black uppercase text-stone-400">Telefone ou WhatsApp</span>
+                    <input
+                      value={telefoneSorteio}
+                      onChange={(event) => setTelefoneSorteio(event.target.value)}
+                      disabled={sorteioOk || salvandoSorteio}
+                      inputMode="tel"
+                      className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
+                      placeholder="Ex.: (11) 99999-9999"
+                    />
+                  </label>
+
+                  {sorteioOk ? (
+                    <p className="mt-3 rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-3 text-sm font-bold text-emerald-100">
+                      Pronto. Seu nome estÃ¡ no sorteio.
+                    </p>
+                  ) : (
+                    <button
+                      onClick={salvarSorteio}
+                      disabled={salvandoSorteio}
+                      className="mt-4 w-full rounded-xl bg-emerald-950 px-5 py-4 font-black uppercase text-emerald-50 ring-1 ring-emerald-700 disabled:opacity-60"
+                    >
+                      {salvandoSorteio ? "Salvando..." : "Participar do sorteio"}
+                    </button>
+                  )}
+
+                  {erroSorteio && (
+                    <p className="mt-3 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">{erroSorteio}</p>
+                  )}
+                </div>
+
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
                   Desafiar os parceiros
                 </button>

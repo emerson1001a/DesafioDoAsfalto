@@ -7,6 +7,9 @@ export type ResultadoPayload = {
   origem: string | null;
   tentativa_numero: number;
   erros: number[];
+  sorteio_participa?: boolean;
+  sorteio_nome?: string;
+  sorteio_telefone?: string;
 };
 
 export function montarPayloadResultado(params: {
