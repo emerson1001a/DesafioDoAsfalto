@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
       : [];
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
+      console.error("[registrar] SUPABASE_URL ou SUPABASE_KEY não configurados");
       return NextResponse.json({ ok: false, erro: "Supabase não configurado" }, { status: 500 });
     }
 
@@ -39,6 +40,8 @@ export async function POST(request: NextRequest) {
       ? `${SUPABASE_URL}/rest/v1/${tabelaResultados}?id=eq.${encodeURIComponent(id)}`
       : `${SUPABASE_URL}/rest/v1/${tabelaResultados}`;
 
+    console.log("[registrar] método:", id ? "PATCH" : "POST", "| id:", id ?? "novo", "| sorteio:", payload.sorteio_participa, "| nome:", payload.sorteio_nome, "| telefone:", payload.sorteio_telefone);
+
     const resposta = await fetch(url, {
       method: id ? "PATCH" : "POST",
       headers: {
@@ -52,14 +55,17 @@ export async function POST(request: NextRequest) {
 
     if (!resposta.ok) {
       const detalhe = await resposta.text();
+      console.error("[registrar] Supabase erro", resposta.status, detalhe);
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
     }
 
     const dados = await resposta.json().catch(() => []);
     const registro = Array.isArray(dados) ? dados[0] : dados;
+    console.log("[registrar] gravado id:", registro?.id ?? "sem id", "| dados:", JSON.stringify(registro));
 
     return NextResponse.json({ ok: true, id: id || registro?.id || null });
-  } catch {
+  } catch (err) {
+    console.error("[registrar] exceção inesperada:", err);
     return NextResponse.json({ ok: false, erro: "Não foi possível registrar" }, { status: 500 });
   }
 }
