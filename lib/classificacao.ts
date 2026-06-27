@@ -1,12 +1,13 @@
 export type ClassificacaoId =
-  | "DONO DO ASFALTO"
-  | "VETERANO DO ASFALTO"
-  | "QUEBRA-GALHO DA ESTRADA"
-  | "MOTORISTA DE LINHA"
-  | "PASSAGEIRO DE CARONA";
+  | "REI DA ESTRADA"
+  | "LOBO RODADO"
+  | "FRETE CERTO"
+  | "NOVATO NO ASFALTO"
+  | "RODANDO NO PREJUÍZO";
 
 export type Classificacao = {
   id: ClassificacaoId;
+  emoji: string;
   titulo: string;
   texto: string;
   tom: string;
@@ -18,9 +19,10 @@ export type Classificacao = {
 export function obterClassificacao(pontuacao: number): Classificacao {
   if (pontuacao >= 9) {
     return {
-      id: "DONO DO ASFALTO",
-      titulo: "DONO DO ASFALTO",
-      texto: "Esse nível não é sorte - é conhecimento de quem rodou de verdade. A estrada te respeita. Agora compartilha e deixa seus colegas tentarem chegar perto. Spoiler: a maioria não vai.",
+      id: "REI DA ESTRADA",
+      emoji: "👑",
+      titulo: "REI DA ESTRADA",
+      texto: "Você não só roda — você comanda. Esse nível é de quem aprendeu na pista, não em livro. A estrada te conhece pelo nome.",
       tom: "Dono da pista",
       cor: "#f5b51b",
       fundo: "sunset",
@@ -30,9 +32,10 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
   if (pontuacao >= 7) {
     return {
-      id: "VETERANO DO ASFALTO",
-      titulo: "VETERANO DO ASFALTO",
-      texto: "Você rodou muito e aprendeu de verdade. Conhecimento na veia, não só na teoria. Agora manda pro seu parceiro - quero ver ele chegar perto de você.",
+      id: "LOBO RODADO",
+      emoji: "🐺",
+      titulo: "LOBO RODADO",
+      texto: "Você rodou muito e aprendeu de verdade. Tem o faro da estrada. Manda pros parceiros — eles precisam saber disso.",
       tom: "Rodou de verdade",
       cor: "#2fc47d",
       fundo: "cabine",
@@ -42,9 +45,10 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
   if (pontuacao >= 5) {
     return {
-      id: "QUEBRA-GALHO DA ESTRADA",
-      titulo: "QUEBRA-GALHO DA ESTRADA",
-      texto: "Metade acerta, metade chuta. Na prática você se vira - mas na teoria ainda tem buraco. Não é desonra, não. Mas seus colegas não precisam saber disso. A menos que você queira testar se eles são piores que você...",
+      id: "FRETE CERTO",
+      emoji: "🎯",
+      titulo: "FRETE CERTO",
+      texto: "Metade certa, metade chutada. Na prática você se vira — mas na teoria ainda tem buraco pra tapar.",
       tom: "Metade lá, metade cá",
       cor: "#4da3ff",
       fundo: "oficina",
@@ -54,9 +58,10 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
   if (pontuacao >= 3) {
     return {
-      id: "MOTORISTA DE LINHA",
-      titulo: "MOTORISTA DE LINHA",
-      texto: "Passou do básico, mas a estrada ainda tem muita coisa escondida de você. Boa notícia: dá pra melhorar. Má notícia: seus colegas provavelmente sabem mais que você. Manda pra eles verem.",
+      id: "NOVATO NO ASFALTO",
+      emoji: "🛞",
+      titulo: "NOVATO NO ASFALTO",
+      texto: "Passou do básico, mas a estrada ainda esconde muita coisa de você. Boa notícia: dá pra melhorar. Ativa as notificações pra não perder o próximo quiz.",
       tom: "Ainda aprendendo",
       cor: "#f28c28",
       fundo: "cidade",
@@ -65,9 +70,10 @@ export function obterClassificacao(pontuacao: number): Classificacao {
   }
 
   return {
-    id: "PASSAGEIRO DE CARONA",
-    titulo: "PASSAGEIRO DE CARONA",
-    texto: "Hm. Bem... todo mundo começa de algum lugar. O problema é que esse lugar tá bem longe do volante. O Zé não vai te julgar - mas seus colegas vão. Se você aguenta sarro, compartilha. Se não aguenta, tenta de novo... Não esquece de ativar as notificações para receber o próximo quiz.",
+    id: "RODANDO NO PREJUÍZO",
+    emoji: "💸",
+    titulo: "RODANDO NO PREJUÍZO",
+    texto: "Hm. Bem... todo mundo começa de algum lugar. Só que esse lugar tá bem longe do volante. Não esquece de ativar as notificações pro próximo quiz.",
     tom: "Vai treinar mais",
     cor: "#f5d94a",
     fundo: "passageiro",
@@ -77,11 +83,11 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
 export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string) {
   const textos: Record<ClassificacaoId, string> = {
-    "DONO DO ASFALTO": `Fiz o Desafio do Asfalto do Zé da Graxa e tirei DONO DO ASFALTO - ${pontuacao} de 10. Para o caminhão e testa você - duvido muito você chegar perto: ${url}`,
-    "VETERANO DO ASFALTO": `Fiz o Desafio do Asfalto do Zé da Graxa - VETERANO DO ASFALTO, ${pontuacao} de 10. Duvido você chegar no mesmo nível. Testa aí se tiver coragem: ${url}`,
-    "QUEBRA-GALHO DA ESTRADA": `Fiz o Desafio do Asfalto do Zé da Graxa e fui QUEBRA-GALHO DA ESTRADA - ${pontuacao} de 10. Algumas me pegaram, vou admitir. Sinceramente acho que você vai pior. Me prova o contrário: ${url}`,
-    "MOTORISTA DE LINHA": `Fiz o Desafio do Asfalto do Zé da Graxa e fui MOTORISTA DE LINHA - ${pontuacao} de 10. Pesado demais esse quiz. Quero ver você passar disso - testa aqui: ${url}`,
-    "PASSAGEIRO DE CARONA": `Acabei de reprovar no Desafio do Asfalto do Zé da Graxa - ${pontuacao} de 10. Nem vou falar minha nota. Mas aposto que você vai pior - prova aí: ${url}`
+    "REI DA ESTRADA": `Tirei REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Para o caminhão e testa você. Duvido chegar perto: ${url}`,
+    "LOBO RODADO": `Fui LOBO RODADO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Sei que você ia pior. Prova aí: ${url}`,
+    "FRETE CERTO": `Tirei FRETE CERTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Acho que você vai pior. Me prova o contrário: ${url}`,
+    "NOVATO NO ASFALTO": `Tirei NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Esse quiz é pesado. Quero ver você tentar: ${url}`,
+    "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Tô tentando de novo. Aposto que você vai pior: ${url}`
   };
 
   return textos[classificacao];
@@ -89,11 +95,11 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
 
 export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string) {
   const textos: Record<ClassificacaoId, string> = {
-    "PASSAGEIRO DE CARONA": `\u{1F602}\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10. Nem vou comentar. Mas aposto que vocês vão pior — testa aí: ${url}`,
-    "MOTORISTA DE LINHA": `\u{1F605} Fiz o Desafio do Asfalto do Zé da Graxa. Fui MOTORISTA DE LINHA — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Quero ver vocês tentando — provavelmente não vão muito melhor não \u{1F60F}: ${url}`,
-    "QUEBRA-GALHO DA ESTRADA": `\u{1F62C} Fiz o Desafio do Asfalto do Zé da Graxa e fui QUEBRA-GALHO — ${pontuacao} de 10. Metade acertei, metade chutei \u{1F602} Quero ver quem aqui vai melhor que eu. Testa aí: ${url}`,
-    "VETERANO DO ASFALTO": `\u{1F4AA} Fiz o Desafio do Asfalto do Zé da Graxa — VETERANO DO ASFALTO, ${pontuacao} de 10. Esse quiz é pesado. Duvido alguém aqui bater isso \u{1F60F} Testa e me prova o contrário: ${url}`,
-    "DONO DO ASFALTO": `\u{1F3C6}\u{1F60E} Fiz o Desafio do Asfalto do Zé da Graxa — DONO DO ASFALTO, ${pontuacao} de 10. Para o caminhão e testa aí. Duvido muito vocês chegarem perto \u{1F602}: ${url}`
+    "RODANDO NO PREJUÍZO": `\u{1F602}\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10. Nem vou comentar. Mas aposto que vocês vão pior — testa aí: ${url}`,
+    "NOVATO NO ASFALTO": `\u{1F605} Fiz o Desafio do Asfalto do Zé da Graxa. Fui NOVATO NO ASFALTO — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Quero ver vocês tentando — provavelmente não vão muito melhor não \u{1F60F}: ${url}`,
+    "FRETE CERTO": `\u{1F62C} Fiz o Desafio do Asfalto do Zé da Graxa e fui FRETE CERTO — ${pontuacao} de 10. Metade acertei, metade chutei \u{1F602} Quero ver quem aqui vai melhor que eu. Testa aí: ${url}`,
+    "LOBO RODADO": `\u{1F43A} Fiz o Desafio do Asfalto do Zé da Graxa — LOBO RODADO, ${pontuacao} de 10. Esse quiz é pesado. Duvido alguém aqui bater isso \u{1F60F} Testa e me prova o contrário: ${url}`,
+    "REI DA ESTRADA": `\u{1F451}\u{1F60E} Fiz o Desafio do Asfalto do Zé da Graxa — REI DA ESTRADA, ${pontuacao} de 10. Para o caminhão e testa aí. Duvido muito vocês chegarem perto \u{1F602}: ${url}`
   };
 
   return textos[classificacao];

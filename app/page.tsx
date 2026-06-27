@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { obterClassificacao, textoWhatsappGrupo } from "@/lib/classificacao";
+import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
 import { montarPayloadResultado } from "@/lib/resultado";
@@ -74,6 +74,9 @@ export default function Home() {
   const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo` : "";
   const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl);
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(textoGrupo)}`;
+  const whatsappIndividualUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_individual` : "";
+  const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl);
+  const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
   function iniciar() {
     localStorage.setItem(nomeKey, nome);
@@ -176,7 +179,7 @@ export default function Home() {
       return;
     }
 
-    setErroSorteio("NÃ£o consegui salvar agora. Tente novamente em alguns segundos.");
+    setErroSorteio("Não consegui salvar agora. Tente novamente em alguns segundos.");
   }
 
   function proxima() {
@@ -386,7 +389,7 @@ export default function Home() {
 
                   {sorteioOk ? (
                     <p className="mt-3 rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-3 text-sm font-bold text-emerald-100">
-                      Pronto. Seu nome estÃ¡ no sorteio.
+                      Pronto. Seu nome está no sorteio.
                     </p>
                   ) : (
                     <button
@@ -469,6 +472,15 @@ export default function Home() {
                 className="rounded-xl bg-emerald-950 px-5 py-4 text-center font-black uppercase text-emerald-50 ring-1 ring-emerald-700"
               >
                 Mandar nos grupos de WhatsApp
+              </a>
+              <a
+                href={whatsappIndividualHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={registrarCompartilhamento}
+                className="rounded-xl border border-emerald-700 px-5 py-4 text-center font-black uppercase text-emerald-100"
+              >
+                Desafiar um parceiro direto
               </a>
               <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
                 Compartilhar no Instagram Stories
