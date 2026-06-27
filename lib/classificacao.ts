@@ -86,7 +86,7 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
     "REI DA ESTRADA": `Tirei REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Para o caminhão e testa você. Duvido chegar perto: ${url}`,
     "LOBO RODADO": `Fui LOBO RODADO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Sei que você ia pior. Prova aí: ${url}`,
     "FRETE CERTO": `Tirei FRETE CERTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Acho que você vai pior. Me prova o contrário: ${url}`,
-    "NOVATO NO ASFALTO": `Tirei NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Esse quiz é pesado. Quero ver você tentar: ${url}`,
+    "NOVATO NO ASFALTO": `Tirei NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Quiz pesado pra caramba. Duvido você ir melhor que eu — prova aí: ${url}`,
     "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Tô tentando de novo. Aposto que você vai pior: ${url}`
   };
 
@@ -95,11 +95,11 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
 
 export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string) {
   const textos: Record<ClassificacaoId, string> = {
-    "RODANDO NO PREJUÍZO": `\u{1F602}\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10. Nem vou comentar. Mas aposto que vocês vão pior — testa aí: ${url}`,
-    "NOVATO NO ASFALTO": `\u{1F605} Fiz o Desafio do Asfalto do Zé da Graxa. Fui NOVATO NO ASFALTO — ${pontuacao} de 10. Algumas me pegaram, vou admitir. Quero ver vocês tentando — provavelmente não vão muito melhor não \u{1F60F}: ${url}`,
-    "FRETE CERTO": `\u{1F62C} Fiz o Desafio do Asfalto do Zé da Graxa e fui FRETE CERTO — ${pontuacao} de 10. Metade acertei, metade chutei \u{1F602} Quero ver quem aqui vai melhor que eu. Testa aí: ${url}`,
-    "LOBO RODADO": `\u{1F43A} Fiz o Desafio do Asfalto do Zé da Graxa — LOBO RODADO, ${pontuacao} de 10. Esse quiz é pesado. Duvido alguém aqui bater isso \u{1F60F} Testa e me prova o contrário: ${url}`,
-    "REI DA ESTRADA": `\u{1F451}\u{1F60E} Fiz o Desafio do Asfalto do Zé da Graxa — REI DA ESTRADA, ${pontuacao} de 10. Para o caminhão e testa aí. Duvido muito vocês chegarem perto \u{1F602}: ${url}`
+    "RODANDO NO PREJUÍZO": `\u{1F602} Tomei uma surra no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10. Dói admitir. Mas eu conheço essa turma — vai tudo pior que eu. Testa e manda aqui: ${url}`,
+    "NOVATO NO ASFALTO": `\u{1F605} NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Algumas me pegaram feio. Tem engraçadinho aqui que vai dizer que ia melhor — então vai lá: ${url}`,
+    "FRETE CERTO": `\u{1F3AF} FRETE CERTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Metade acertei, metade chutei. Quem aqui bate isso? Duvido. Testa: ${url}`,
+    "LOBO RODADO": `\u{1F43A} LOBO RODADO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Quiz pesado. Duvido alguém aqui chegar nesse nível. Se tiver coragem, testa e manda o resultado: ${url}`,
+    "REI DA ESTRADA": `\u{1F451} REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10. Para o caminhão. Duvido qualquer um de vocês chegar perto. Testa e me prova o contrário: ${url}`
   };
 
   return textos[classificacao];
