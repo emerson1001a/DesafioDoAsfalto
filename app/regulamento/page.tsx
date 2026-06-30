@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import FecharAba from "./FecharAba";
 
 export const metadata: Metadata = {
   title: "Regulamento — Desafio do Asfalto",
@@ -73,12 +73,7 @@ export default function Regulamento() {
         ))}
 
         <div className="pb-6 pt-2 text-center">
-          <Link
-            href="/"
-            className="gold-button inline-block rounded-xl px-6 py-4 font-black uppercase"
-          >
-            Voltar para o quiz
-          </Link>
+          <FecharAba />
         </div>
       </div>
     </main>
