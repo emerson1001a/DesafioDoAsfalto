@@ -423,7 +423,7 @@ export default function Home() {
                   )}
 
                   <p className="mt-4 text-center">
-                    <a href="/regulamento" className="text-xs text-stone-600 hover:text-stone-400 underline underline-offset-2">
+                    <a href="/regulamento" target="_blank" rel="noopener noreferrer" className="text-xs text-stone-600 hover:text-stone-400 underline underline-offset-2">
                       Ver regulamento completo
                     </a>
                   </p>
