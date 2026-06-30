@@ -83,32 +83,30 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
 export type RankingInfo = { posicao: number; total: number };
 
-function rankingTexto(ranking: RankingInfo | undefined): string {
+function pos(ranking: RankingInfo | undefined, sufixo: string): string {
   if (!ranking) return "";
-  return ` Fui o #${ranking.posicao} de ${ranking.total.toLocaleString("pt-BR")}.`;
+  return ` Estou na posição #${ranking.posicao} de ${ranking.total.toLocaleString("pt-BR")}${sufixo}`;
 }
 
 export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo) {
-  const rk = rankingTexto(ranking);
   const textos: Record<ClassificacaoId, string> = {
-    "REI DA ESTRADA": `Tirei REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Para o caminhão e testa você. Duvido chegar perto: ${url}`,
-    "LOBO RODADO": `Fui LOBO RODADO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Sei que você ia pior. Prova aí: ${url}`,
-    "FRETE CERTO": `Tirei FRETE CERTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Algumas me pegaram, vou admitir. Acho que você vai pior. Me prova o contrário: ${url}`,
-    "NOVATO NO ASFALTO": `Tirei NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Quiz pesado pra caramba. Duvido você ir melhor que eu — prova aí: ${url}`,
-    "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Tô tentando de novo. Aposto que você vai pior: ${url}`
+    "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo! ${url}`,
+    "NOVATO NO ASFALTO": `Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo! ${url}`,
+    "FRETE CERTO": `Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda! ${url}`,
+    "LOBO RODADO": `Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo! ${url}`,
+    "REI DA ESTRADA": `Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo! ${url}`
   };
 
   return textos[classificacao];
 }
 
 export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo) {
-  const rk = rankingTexto(ranking);
   const textos: Record<ClassificacaoId, string> = {
-    "RODANDO NO PREJUÍZO": `\u{1F602} Tomei uma surra no Desafio do Asfalto do Zé da Graxa. ${pontuacao} de 10.${rk} Dói admitir. Mas eu conheço essa turma — vai tudo pior que eu. Testa e manda aqui: ${url}`,
-    "NOVATO NO ASFALTO": `\u{1F605} NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Algumas me pegaram feio. Tem engraçadinho aqui que vai dizer que ia melhor — então vai lá: ${url}`,
-    "FRETE CERTO": `\u{1F3AF} FRETE CERTO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Metade acertei, metade chutei. Quem aqui bate isso? Duvido. Testa: ${url}`,
-    "LOBO RODADO": `\u{1F43A} LOBO RODADO no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Quiz pesado. Duvido alguém aqui chegar nesse nível. Se tiver coragem, testa e manda o resultado: ${url}`,
-    "REI DA ESTRADA": `\u{1F451} REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — ${pontuacao} de 10.${rk} Para o caminhão. Duvido qualquer um de vocês chegar perto. Testa e me prova o contrário: ${url}`
+    "RODANDO NO PREJUÍZO": `\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo! ${url}`,
+    "NOVATO NO ASFALTO": `\u{1F605} Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo! ${url}`,
+    "FRETE CERTO": `\u{1F3AF} Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda! ${url}`,
+    "LOBO RODADO": `\u{1F43A} Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo! ${url}`,
+    "REI DA ESTRADA": `\u{1F451} Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo! ${url}`
   };
 
   return textos[classificacao];
