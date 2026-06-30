@@ -10,8 +10,6 @@ type PerguntaSessao = Pergunta & { alternativasEmbaralhadas: Alternativa[] };
 type Tela = "entrada" | "quiz" | "resultado";
 
 const tentativaKey = "desafio-asfalto-tentativas";
-const nomeKey = "desafio-asfalto-nome";
-const instaKey = "desafio-asfalto-instagram";
 
 function criarSessao(): PerguntaSessao[] {
   return embaralhar(perguntas).map((pergunta) => ({
@@ -26,8 +24,6 @@ export default function Home() {
   const tempoSegundosRef = useRef<number>(0);
   const resultadoIdRef = useRef<string | null>(null);
   const [tela, setTela] = useState<Tela>("entrada");
-  const [nome, setNome] = useState("");
-  const [instagram, setInstagram] = useState("");
   const [sessao, setSessao] = useState<PerguntaSessao[]>([]);
   const [indice, setIndice] = useState(0);
   const [selecionada, setSelecionada] = useState<string | null>(null);
@@ -41,6 +37,7 @@ export default function Home() {
   const [resultadoId, setResultadoId] = useState<string | null>(null);
   const [incluirInstagram, setIncluirInstagram] = useState(false);
   const [modal, setModal] = useState(false);
+  const [mostrarCamposInstagram, setMostrarCamposInstagram] = useState(false);
   const [nomeCompartilhar, setNomeCompartilhar] = useState("");
   const [instagramCompartilhar, setInstagramCompartilhar] = useState("");
   const [nomeSorteio, setNomeSorteio] = useState("");
@@ -52,8 +49,6 @@ export default function Home() {
   const [carregandoRanking, setCarregandoRanking] = useState(false);
 
   useEffect(() => {
-    setNome(localStorage.getItem(nomeKey) || "");
-    setInstagram(localStorage.getItem(instaKey) || "");
     const parametros = new URLSearchParams(window.location.search);
     setOrigem(parametros.get("utm_source"));
   }, []);
@@ -77,8 +72,8 @@ export default function Home() {
 
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
-  const nomeCard = nomeCompartilhar.trim() || nome.trim() || "Você";
-  const instagramLimpo = instagramCompartilhar.trim() || instagram.trim();
+  const nomeCard = nomeCompartilhar.trim() || "Motorista";
+  const instagramLimpo = instagramCompartilhar.trim();
   const instagramCard = incluirInstagram && instagramLimpo ? (instagramLimpo.startsWith("@") ? instagramLimpo : `@${instagramLimpo}`) : "";
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
   const origemUrl = typeof window === "undefined" ? "" : window.location.origin + window.location.pathname;
@@ -90,8 +85,6 @@ export default function Home() {
   const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
   function iniciar() {
-    localStorage.setItem(nomeKey, nome);
-    localStorage.setItem(instaKey, instagram);
     const tentativas = Number(localStorage.getItem(tentativaKey) || "0") + 1;
     localStorage.setItem(tentativaKey, String(tentativas));
     setTentativa(tentativas);
@@ -235,8 +228,6 @@ export default function Home() {
   }
 
   function registrarCompartilhamento() {
-    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
-    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
     void registrarResultado(true);
   }
 
@@ -252,8 +243,6 @@ export default function Home() {
   }
 
   async function compartilharStories() {
-    localStorage.setItem(nomeKey, nomeCompartilhar || nome);
-    localStorage.setItem(instaKey, instagramCompartilhar || instagram);
     void registrarResultado(true);
 
     const janelaFallback = window.open("", "_blank");
@@ -286,9 +275,10 @@ export default function Home() {
   }
 
   function abrirCompartilhamento() {
-    setNomeCompartilhar(nome);
-    setInstagramCompartilhar(instagram);
+    setNomeCompartilhar("");
+    setInstagramCompartilhar("");
     setIncluirInstagram(false);
+    setMostrarCamposInstagram(false);
     setModal(true);
   }
 
@@ -312,27 +302,6 @@ export default function Home() {
             <p className="mt-4 text-lg font-bold text-stone-300">
               7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?
             </p>
-
-            <div className="mt-7 space-y-4">
-              <label className="block">
-                <span className="mb-2 block text-sm font-bold text-stone-300">Como posso te chamar? (opcional)</span>
-                <input
-                  value={nome}
-                  onChange={(event) => setNome(event.target.value)}
-                  className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-4 text-lg outline-none focus:border-gold"
-                  placeholder="Ex.: Zé"
-                />
-              </label>
-              <label className="block">
-                <span className="mb-2 block text-sm font-bold text-stone-300">Qual seu @ no Instagram? (opcional)</span>
-                <input
-                  value={instagram}
-                  onChange={(event) => setInstagram(event.target.value)}
-                  className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-4 text-lg outline-none focus:border-gold"
-                  placeholder="@seuperfil"
-                />
-              </label>
-            </div>
 
             <button onClick={iniciar} className="gold-button mt-7 w-full rounded-xl px-5 py-5 text-xl font-black uppercase">
               Aceitar o desafio
@@ -482,35 +451,6 @@ export default function Home() {
               <h2 className="text-xl font-black">Mandar o desafio</h2>
               <button onClick={() => setModal(false)} className="rounded-lg bg-stone-800 px-3 py-2 font-black">X</button>
             </div>
-            <div className="mb-4 rounded-xl border border-stone-700 bg-black/35 p-4">
-              <p className="mb-3 text-sm font-bold text-stone-300">Quer personalizar o card antes de mandar?</p>
-              <label className="block">
-                <span className="mb-1 block text-xs font-black uppercase text-stone-400">Nome no card</span>
-                <input
-                  value={nomeCompartilhar}
-                  onChange={(event) => setNomeCompartilhar(event.target.value)}
-                  className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                  placeholder="Você"
-                />
-              </label>
-              <label className="mt-3 flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-950/70 p-3">
-                <input
-                  type="checkbox"
-                  checked={incluirInstagram}
-                  onChange={(event) => setIncluirInstagram(event.target.checked)}
-                  className="h-5 w-5 accent-yellow-500"
-                />
-                <span className="text-sm font-bold">Colocar meu @ do Instagram no card</span>
-              </label>
-              {incluirInstagram && (
-                <input
-                  value={instagramCompartilhar}
-                  onChange={(event) => setInstagramCompartilhar(event.target.value)}
-                  className="mt-3 w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                  placeholder="@seuperfil"
-                />
-              )}
-            </div>
             <div className="grid gap-3">
               <a
                 href={whatsappHref}
@@ -530,9 +470,45 @@ export default function Home() {
               >
                 Desafiar um parceiro direto
               </a>
-              <button onClick={compartilharStories} className="rounded-xl bg-brake px-5 py-4 font-black uppercase">
+              <button
+                onClick={() => setMostrarCamposInstagram((v) => !v)}
+                className="rounded-xl bg-brake px-5 py-4 font-black uppercase"
+              >
                 Compartilhar no Instagram Stories
               </button>
+              {mostrarCamposInstagram && (
+                <div className="rounded-xl border border-stone-700 bg-black/35 p-4">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-black uppercase text-stone-400">Nome no card</span>
+                    <input
+                      value={nomeCompartilhar}
+                      onChange={(event) => setNomeCompartilhar(event.target.value)}
+                      className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                      placeholder="Motorista"
+                    />
+                  </label>
+                  <label className="mt-3 flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-950/70 p-3">
+                    <input
+                      type="checkbox"
+                      checked={incluirInstagram}
+                      onChange={(event) => setIncluirInstagram(event.target.checked)}
+                      className="h-5 w-5 accent-yellow-500"
+                    />
+                    <span className="text-sm font-bold">Colocar meu @ do Instagram no card</span>
+                  </label>
+                  {incluirInstagram && (
+                    <input
+                      value={instagramCompartilhar}
+                      onChange={(event) => setInstagramCompartilhar(event.target.value)}
+                      className="mt-3 w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                      placeholder="@seuperfil"
+                    />
+                  )}
+                  <button onClick={compartilharStories} className="mt-4 w-full rounded-xl bg-brake px-5 py-4 font-black uppercase">
+                    Gerar e compartilhar o card
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
