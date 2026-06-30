@@ -375,7 +375,7 @@ export default function Home() {
               </div>
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
-                  <p className="text-sm font-black uppercase text-gold">Sorteio Pix de R$ 500</p>
+                  <p className="brand-title text-4xl leading-none text-gold">Sorteio Pix de R$ 500</p>
                   <h2 className="mt-2 text-xl font-black text-white">Quer concorrer e ainda desafiar seus amigos a te superar?</h2>
                   <p className="mt-2 text-sm font-bold text-stone-300">
                     Deixe seu nome e telefone para participar do sorteio. Se for sorteado, a gente entra em contato por WhatsApp.
@@ -421,6 +421,12 @@ export default function Home() {
                   {erroSorteio && (
                     <p className="mt-3 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">{erroSorteio}</p>
                   )}
+
+                  <p className="mt-4 text-center">
+                    <a href="/regulamento" className="text-xs text-stone-600 hover:text-stone-400 underline underline-offset-2">
+                      Ver regulamento completo
+                    </a>
+                  </p>
                 </div>
 
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
