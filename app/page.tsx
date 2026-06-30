@@ -69,6 +69,12 @@ export default function Home() {
     });
   }, [selecionada]);
 
+  useEffect(() => {
+    if (tela === "resultado") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [tela]);
+
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
   const nomeCard = nomeCompartilhar.trim() || nome.trim() || "Você";
