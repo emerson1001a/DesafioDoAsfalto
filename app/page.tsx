@@ -24,6 +24,7 @@ export default function Home() {
   const feedbackRef = useRef<HTMLDivElement | null>(null);
   const tempoInicioRef = useRef<number>(0);
   const tempoSegundosRef = useRef<number>(0);
+  const resultadoIdRef = useRef<string | null>(null);
   const [tela, setTela] = useState<Tela>("entrada");
   const [nome, setNome] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -96,6 +97,7 @@ export default function Home() {
     setRegistroOk(null);
     setErroRegistro("");
     setResultadoId(null);
+    resultadoIdRef.current = null;
     setSorteioOk(false);
     setErroSorteio("");
     setNomeSorteio("");
@@ -153,7 +155,7 @@ export default function Home() {
             sorteio_telefone: dadosSorteio.telefone
           }
         : {}),
-      id: resultadoId
+      id: resultadoIdRef.current
     };
 
     try {
@@ -165,6 +167,7 @@ export default function Home() {
       const dados = await resposta.json().catch(() => ({}));
       setRegistroOk(resposta.ok);
       if (resposta.ok && dados.id) {
+        resultadoIdRef.current = dados.id;
         setResultadoId(dados.id);
       }
       if (!resposta.ok) {

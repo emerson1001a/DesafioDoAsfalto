@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=minimal"
+        Prefer: id ? "return=minimal,count=exact" : "return=minimal"
       },
       body: JSON.stringify(payload)
     });
@@ -64,6 +64,15 @@ export async function POST(request: NextRequest) {
       const detalhe = await resposta.text();
       console.error("[registrar] Supabase erro", resposta.status, detalhe);
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
+    }
+
+    if (id) {
+      const contentRange = resposta.headers.get("content-range");
+      const total = contentRange ? Number(contentRange.split("/")[1]) : NaN;
+      if (total === 0) {
+        console.error("[registrar] PATCH não encontrou registro id=", id);
+        return NextResponse.json({ ok: false, erro: "Registro não encontrado para atualizar" }, { status: 404 });
+      }
     }
 
     return NextResponse.json({ ok: true, id: registroId });
