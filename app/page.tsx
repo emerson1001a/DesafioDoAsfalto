@@ -376,9 +376,9 @@ export default function Home() {
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
                   <p className="text-sm font-black uppercase text-gold">Sorteio Pix de R$ 500</p>
-                  <h2 className="mt-2 text-xl font-black text-white">Quer participar?</h2>
+                  <h2 className="mt-2 text-xl font-black text-white">Quer concorrer e ainda desafiar seus amigos a te superar?</h2>
                   <p className="mt-2 text-sm font-bold text-stone-300">
-                    Deixe seu nome e telefone. Se for sorteado, a gente entra em contato por WhatsApp.
+                    Deixe seu nome e telefone para participar do sorteio. Se for sorteado, a gente entra em contato por WhatsApp.
                   </p>
 
                   <label className="mt-4 block">
