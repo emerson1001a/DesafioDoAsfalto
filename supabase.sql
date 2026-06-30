@@ -19,6 +19,9 @@ alter table public.resultados_do_quiz
   add column if not exists sorteio_nome text,
   add column if not exists sorteio_telefone text;
 
+alter table public.resultados_do_quiz
+  add column if not exists tempo_segundos integer;
+
 alter table public.resultados_do_quiz enable row level security;
 
 drop policy if exists "Bloquear leitura publica dos resultados" on public.resultados_do_quiz;

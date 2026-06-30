@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { tabelaResultados } from "@/lib/supabase-config";
 
@@ -13,6 +14,8 @@ export async function POST(request: NextRequest) {
     const erros = Array.isArray(body.erros)
       ? body.erros.map((id: unknown) => Number(id)).filter((id: number) => Number.isInteger(id) && id >= 1 && id <= 10)
       : [];
+    const tempoSegundosRaw = body.tempo_segundos !== undefined && body.tempo_segundos !== null ? Number(body.tempo_segundos) : null;
+    const tempoSegundos = tempoSegundosRaw !== null && Number.isInteger(tempoSegundosRaw) && tempoSegundosRaw >= 0 ? tempoSegundosRaw : null;
 
     if (!SUPABASE_URL || !SUPABASE_KEY) {
       console.error("[registrar] SUPABASE_URL ou SUPABASE_KEY não configurados");
@@ -24,7 +27,11 @@ export async function POST(request: NextRequest) {
     }
 
     const id = typeof body.id === "string" ? body.id : null;
-    const payload = {
+    // Para INSERT: gera UUID aqui para poder retornar ao cliente sem precisar de SELECT
+    // (SELECT após INSERT falha com anon key quando RLS bloqueia leitura)
+    const registroId = id ?? randomUUID();
+    const payload: Record<string, unknown> = {
+      id: registroId,
       classificacao: String(body.classificacao || ""),
       pontuacao,
       compartilhou: Boolean(body.compartilhou),
@@ -35,6 +42,8 @@ export async function POST(request: NextRequest) {
       sorteio_nome: typeof body.sorteio_nome === "string" ? body.sorteio_nome.slice(0, 120) : null,
       sorteio_telefone: typeof body.sorteio_telefone === "string" ? body.sorteio_telefone.slice(0, 40) : null
     };
+    // Só inclui tempo_segundos se existir — evita erro caso a coluna ainda não exista no banco
+    if (tempoSegundos !== null) payload.tempo_segundos = tempoSegundos;
 
     const url = id
       ? `${SUPABASE_URL}/rest/v1/${tabelaResultados}?id=eq.${encodeURIComponent(id)}`
@@ -46,7 +55,7 @@ export async function POST(request: NextRequest) {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=representation"
+        Prefer: "return=minimal"
       },
       body: JSON.stringify(payload)
     });
@@ -57,10 +66,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
     }
 
-    const dados = await resposta.json().catch(() => []);
-    const registro = Array.isArray(dados) ? dados[0] : dados;
-
-    return NextResponse.json({ ok: true, id: id || registro?.id || null });
+    return NextResponse.json({ ok: true, id: registroId });
   } catch (err) {
     console.error("[registrar] exceção inesperada:", err);
     return NextResponse.json({ ok: false, erro: "Não foi possível registrar" }, { status: 500 });

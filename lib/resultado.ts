@@ -7,6 +7,7 @@ export type ResultadoPayload = {
   origem: string | null;
   tentativa_numero: number;
   erros: number[];
+  tempo_segundos?: number;
   sorteio_participa?: boolean;
   sorteio_nome?: string;
   sorteio_telefone?: string;
@@ -18,6 +19,7 @@ export function montarPayloadResultado(params: {
   origem?: string | null;
   tentativaNumero: number;
   erros: number[];
+  tempoSegundos?: number;
 }): ResultadoPayload {
   return {
     classificacao: obterClassificacao(params.pontuacao).id,
@@ -25,6 +27,7 @@ export function montarPayloadResultado(params: {
     compartilhou: params.compartilhou ?? false,
     origem: params.origem ?? null,
     tentativa_numero: params.tentativaNumero,
-    erros: params.erros
+    erros: params.erros,
+    ...(params.tempoSegundos !== undefined ? { tempo_segundos: params.tempoSegundos } : {})
   };
 }

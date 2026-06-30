@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo } from "@/lib/classificacao";
+import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo, type RankingInfo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
 import { montarPayloadResultado } from "@/lib/resultado";
@@ -22,6 +22,8 @@ function criarSessao(): PerguntaSessao[] {
 
 export default function Home() {
   const feedbackRef = useRef<HTMLDivElement | null>(null);
+  const tempoInicioRef = useRef<number>(0);
+  const tempoSegundosRef = useRef<number>(0);
   const [tela, setTela] = useState<Tela>("entrada");
   const [nome, setNome] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -45,6 +47,8 @@ export default function Home() {
   const [salvandoSorteio, setSalvandoSorteio] = useState(false);
   const [sorteioOk, setSorteioOk] = useState(false);
   const [erroSorteio, setErroSorteio] = useState("");
+  const [ranking, setRanking] = useState<RankingInfo | null>(null);
+  const [carregandoRanking, setCarregandoRanking] = useState(false);
 
   useEffect(() => {
     setNome(localStorage.getItem(nomeKey) || "");
@@ -72,10 +76,10 @@ export default function Home() {
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
   const origemUrl = typeof window === "undefined" ? "" : window.location.origin + window.location.pathname;
   const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo` : "";
-  const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl);
+  const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl, ranking ?? undefined);
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(textoGrupo)}`;
   const whatsappIndividualUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_individual` : "";
-  const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl);
+  const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl, ranking ?? undefined);
   const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
   function iniciar() {
@@ -97,6 +101,10 @@ export default function Home() {
     setNomeSorteio("");
     setTelefoneSorteio("");
     setModal(false);
+    setRanking(null);
+    setCarregandoRanking(false);
+    tempoInicioRef.current = Date.now();
+    tempoSegundosRef.current = 0;
     setTela("quiz");
   }
 
@@ -111,6 +119,21 @@ export default function Home() {
     }
   }
 
+  async function buscarRanking(pontuacao: number, tempo: number) {
+    setCarregandoRanking(true);
+    try {
+      const resposta = await fetch(`/api/ranking?pontuacao=${pontuacao}&tempo=${tempo}`);
+      if (resposta.ok) {
+        const dados = await resposta.json();
+        if (dados.ok) setRanking({ posicao: dados.posicao, total: dados.total });
+      }
+    } catch {
+      // ranking é opcional — falha silenciosa
+    } finally {
+      setCarregandoRanking(false);
+    }
+  }
+
   async function registrarResultado(compartilhou = false, dadosSorteio?: { nome: string; telefone: string }) {
     if (registrando) return false;
     setRegistrando(true);
@@ -120,7 +143,8 @@ export default function Home() {
       compartilhou,
       origem,
       tentativaNumero: tentativa,
-      erros
+      erros,
+      tempoSegundos: tempoSegundosRef.current || undefined
       }),
       ...(dadosSorteio
         ? {
@@ -189,8 +213,16 @@ export default function Home() {
       return;
     }
 
+    const tempo = tempoInicioRef.current > 0
+      ? Math.round((Date.now() - tempoInicioRef.current) / 1000)
+      : 0;
+    tempoSegundosRef.current = tempo;
     setTela("resultado");
-    setTimeout(() => registrarResultado(false), 0);
+    setTimeout(() => {
+      void registrarResultado(false).then((ok) => {
+        if (ok) void buscarRanking(acertos, tempo);
+      });
+    }, 0);
   }
 
   function registrarCompartilhamento() {
@@ -351,6 +383,13 @@ export default function Home() {
                 <p className="text-sm font-black uppercase text-gold">Resultado final</p>
                 <h1 className="brand-title mt-3 text-[2.75rem] leading-none text-white">{classificacao.titulo}</h1>
                 <p className="mt-3 text-[2.15rem] font-black text-gold">{acertos} de 10</p>
+                {carregandoRanking ? (
+                  <p className="mt-1 text-sm font-bold text-stone-500">calculando sua posição...</p>
+                ) : ranking ? (
+                  <p className="mt-1 text-sm font-black uppercase tracking-wide text-stone-300">
+                    #{ranking.posicao.toLocaleString("pt-BR")} de {ranking.total.toLocaleString("pt-BR")} participantes
+                  </p>
+                ) : null}
                 <p className="mt-4 text-base font-bold text-stone-200">{classificacao.texto}</p>
                 <p className="mt-4 rounded-xl border border-gold/25 bg-black/35 p-3 text-sm font-bold text-gold">
                   Inscreva-se no canal @ZedaGraxa.oficial para não perder os próximos quizzes.
