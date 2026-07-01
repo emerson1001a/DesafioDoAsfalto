@@ -387,6 +387,8 @@ export default function Home() {
                       value={nomeSorteio}
                       onChange={(event) => setNomeSorteio(event.target.value)}
                       disabled={sorteioOk || salvandoSorteio}
+                      autoCorrect="off"
+                      spellCheck={false}
                       className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
                       placeholder="Ex.: Paulo"
                     />
