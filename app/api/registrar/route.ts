@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     if (id) {
       const contentRange = resposta.headers.get("content-range");
       const total = contentRange ? Number(contentRange.split("/")[1]) : NaN;
-      if (total === 0) {
+      if (!(total > 0)) {
         console.error("[registrar] PATCH não encontrou registro id=", id);
         return NextResponse.json({ ok: false, erro: "Registro não encontrado para atualizar" }, { status: 404 });
       }
