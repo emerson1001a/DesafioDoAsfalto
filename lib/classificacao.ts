@@ -90,11 +90,16 @@ function pos(ranking: RankingInfo | undefined, sufixo: string): string {
 
 export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo) {
   const textos: Record<ClassificacaoId, string> = {
-    "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo! ${url}`,
-    "NOVATO NO ASFALTO": `Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo! ${url}`,
-    "FRETE CERTO": `Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda! ${url}`,
-    "LOBO RODADO": `Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo! ${url}`,
-    "REI DA ESTRADA": `Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo! ${url}`
+    "RODANDO NO PREJUÍZO": `Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "NOVATO NO ASFALTO": `Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "FRETE CERTO": `Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "LOBO RODADO": `Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "REI DA ESTRADA": `Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`
   };
 
   return textos[classificacao];
@@ -102,11 +107,16 @@ export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number,
 
 export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo) {
   const textos: Record<ClassificacaoId, string> = {
-    "RODANDO NO PREJUÍZO": `\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo! ${url}`,
-    "NOVATO NO ASFALTO": `\u{1F605} Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo! ${url}`,
-    "FRETE CERTO": `\u{1F3AF} Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda! ${url}`,
-    "LOBO RODADO": `\u{1F43A} Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo! ${url}`,
-    "REI DA ESTRADA": `\u{1F451} Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo! ${url}`
+    "RODANDO NO PREJUÍZO": `\u{1F602} Tomei um baile no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", lá no fundo mesmo.")} Tô tentando de novo. Aposto que você vai pior. Faz e me manda — esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "NOVATO NO ASFALTO": `\u{1F605} Recebi o título de NOVATO NO ASFALTO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ".")} Algumas me pegaram, vou admitir. Duvido você ir melhor — testa aí, esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "FRETE CERTO": `\u{1F3AF} Peguei o título FRETE CERTO no Desafio do Asfalto do Zé da Graxa (tipo: MEIA BOCA rsrs) — Acertei ${pontuacao} de 10.${pos(ranking, ", bem no meio da tabela.")} Metade acertei, metade chutei. Quem aqui bate isso? Faz e me manda!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "LOBO RODADO": `\u{1F43A} Recebi o título de LOBO RODADO no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", bem cotado.")} Quiz pesado pra caramba. Duvido você chegar perto — bora ver, esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`,
+    "REI DA ESTRADA": `\u{1F451} Recebi o título de REI DA ESTRADA no Desafio do Asfalto do Zé da Graxa — Acertei ${pontuacao} de 10.${pos(ranking, ", quase no topo!")} Quando parar o caminhão testa aí. Duvido chegar perto — esse quiz está pegando fogo!
+🏆 Tá rolando sorteio de R$ 500 em PIX! Participa: ${url}`
   };
 
   return textos[classificacao];
