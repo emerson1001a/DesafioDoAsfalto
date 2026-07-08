@@ -332,12 +332,16 @@ export default function Home() {
             </div>
             <h1 className="brand-title text-[2.85rem] leading-none text-white">Você acha que manda na estrada?</h1>
             <p className="mt-4 text-lg font-bold text-stone-300">
-              7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?
+              Responda 5 perguntas e veremos...
             </p>
 
             <button onClick={iniciar} className="gold-button mt-7 w-full rounded-xl px-5 py-5 text-xl font-black uppercase">
               Aceitar o desafio
             </button>
+
+            <div className="mt-4 rounded-xl border border-gold/40 bg-amber-950/60 px-4 py-3 text-center">
+              <p className="font-black uppercase tracking-wide text-gold">Concorra a PIX de R$ 500,00</p>
+            </div>
           </section>
         )}
 
