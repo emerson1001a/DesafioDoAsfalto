@@ -204,7 +204,6 @@ export default function Home() {
   }
 
   async function salvarSorteio() {
-    tocarMotor();
     const nomeLimpo = nomeSorteio.trim();
     const telefoneLimpo = telefoneSorteio.trim();
 
@@ -223,6 +222,7 @@ export default function Home() {
     setSalvandoSorteio(false);
 
     if (salvou) {
+      tocarMotor();
       setSorteioOk(true);
       return;
     }
@@ -249,7 +249,6 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp(href: string) {
-    tocarMotor();
     await registrarResultado(true);
     window.open(href, "_blank", "noopener,noreferrer");
   }
@@ -266,7 +265,6 @@ export default function Home() {
   }
 
   async function compartilharStories() {
-    tocarMotor();
     const registrou = await registrarResultado(true);
     if (!registrou) {
       console.error("[compartilharStories] falha ao registrar compartilhamento");
