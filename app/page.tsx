@@ -193,7 +193,14 @@ export default function Home() {
   }
 
   function tocarMotor() {
-    motorRef.current?.play().catch(() => {});
+    const audio = motorRef.current;
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play().catch((err) => console.error("[som] falha ao tocar:", err));
+    setTimeout(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }, 4000);
   }
 
   async function salvarSorteio() {
