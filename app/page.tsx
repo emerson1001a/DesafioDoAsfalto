@@ -24,6 +24,7 @@ export default function Home() {
   const tempoInicioRef = useRef<number>(0);
   const tempoSegundosRef = useRef<number>(0);
   const resultadoIdRef = useRef<string | null>(null);
+  const motorRef = useRef<HTMLAudioElement | null>(null);
   const [tela, setTela] = useState<Tela>("entrada");
   const [sessao, setSessao] = useState<PerguntaSessao[]>([]);
   const [indice, setIndice] = useState(0);
@@ -191,7 +192,12 @@ export default function Home() {
     }
   }
 
+  function tocarMotor() {
+    motorRef.current?.play().catch(() => {});
+  }
+
   async function salvarSorteio() {
+    tocarMotor();
     const nomeLimpo = nomeSorteio.trim();
     const telefoneLimpo = telefoneSorteio.trim();
 
@@ -236,6 +242,7 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp(href: string) {
+    tocarMotor();
     await registrarResultado(true);
     window.open(href, "_blank", "noopener,noreferrer");
   }
@@ -252,6 +259,7 @@ export default function Home() {
   }
 
   async function compartilharStories() {
+    tocarMotor();
     const registrou = await registrarResultado(true);
     if (!registrou) {
       console.error("[compartilharStories] falha ao registrar compartilhamento");
@@ -528,6 +536,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <audio ref={motorRef} src="/sounds/motor.wav" preload="auto" />
     </main>
   );
 }
