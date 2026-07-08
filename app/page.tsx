@@ -390,18 +390,18 @@ export default function Home() {
           <section className="space-y-4">
             <div className="road-card overflow-hidden rounded-2xl">
               <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
-                <p className="text-sm font-black uppercase text-gold">Resultado final</p>
-                <h1 className="brand-title mt-3 text-[2.75rem] leading-none text-white">{classificacao.titulo}</h1>
-                <p className="mt-3 text-[2.15rem] font-black text-gold">{acertos} de {sessao.length}</p>
+                <p className="text-sm font-black uppercase text-gold">Seu título</p>
+                <div className="mt-2 flex items-end justify-between gap-3">
+                  <h1 className="brand-title min-w-0 flex-1 text-[2.5rem] leading-none text-white">{classificacao.titulo}</h1>
+                  <p className="flex-shrink-0 text-[1.75rem] font-black text-gold">{acertos}/{sessao.length}</p>
+                </div>
                 {carregandoRanking ? (
                   <p className="mt-1 text-sm font-bold text-stone-500">calculando sua posição...</p>
                 ) : ranking ? (
-                  <p className="mt-1 text-sm font-black uppercase tracking-wide text-stone-300">
-                    #{ranking.posicao.toLocaleString("pt-BR")} de {ranking.total.toLocaleString("pt-BR")} participantes
+                  <p className="mt-1 text-sm font-bold text-stone-300">
+                    Você ficou em {ranking.posicao.toLocaleString("pt-BR")}º de {ranking.total.toLocaleString("pt-BR")} participantes
                   </p>
                 ) : null}
-                <p className="mt-4 text-base font-bold text-stone-200">{classificacao.texto}</p>
-
               </div>
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
@@ -461,6 +461,8 @@ export default function Home() {
                     </a>
                   </p>
                 </div>
+
+                <p className="text-base font-bold text-stone-200">{classificacao.texto}</p>
 
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
                   Desafiar os parceiros
