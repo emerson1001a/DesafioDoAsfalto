@@ -4,6 +4,14 @@ import { obterClassificacao } from "@/lib/classificacao";
 
 export const runtime = "edge";
 
+const textoCard: Record<string, string> = {
+  "RODANDO NO PREJUÍZO": "Errei quase tudo e nem tô com vergonha. Se acha que sabe mais que eu, prova.",
+  "NOVATO NO ASFALTO": "Ainda tô pegando o jeito da estrada. Bora ver se você vai melhor.",
+  "FRETE CERTO": "Acertei metade, no ponto certo. Duvido você fazer muito diferente.",
+  "LOBO RODADO": "Rodei o suficiente pra saber das coisas. Poucos chegam perto disso.",
+  "REI DA ESTRADA": "Não errei quase nada. Bota à prova se acha que consegue igual.",
+};
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const nome = searchParams.get("nome")?.slice(0, 32) || "Você";
@@ -108,7 +116,23 @@ export async function GET(request: NextRequest) {
             }}
           />
           <div style={{ display: "flex", fontSize: "112px", lineHeight: .95, fontWeight: 950 }}>{classificacao.titulo}</div>
-          <div style={{ display: "flex", fontSize: "46px", lineHeight: 1.18, maxWidth: "880px" }}>{classificacao.texto}</div>
+          <div style={{ display: "flex", fontSize: "46px", lineHeight: 1.18, maxWidth: "880px" }}>
+            {textoCard[classificacao.id] ?? classificacao.texto}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              padding: "28px 40px",
+              borderRadius: "20px",
+              background: "rgba(245, 181, 27, 0.15)",
+              border: "2px solid rgba(245, 181, 27, 0.5)",
+              fontSize: "50px",
+              fontWeight: 800,
+              color: "#f5d94a",
+            }}
+          >
+            🏆 R$500 no Pix pra quem topar o desafio
+          </div>
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", zIndex: 1 }}>

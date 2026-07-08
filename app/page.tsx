@@ -268,7 +268,7 @@ export default function Home() {
         janelaFallback?.close();
         await navigator.share({
           title: "Desafio do Asfalto",
-          text: `Fiz o Desafio do Asfalto do Zé da Graxa e tirei ${acertos} de 10. Caí como ${classificacao.id}. Quero ver você tentando também.`,
+          text: `🏆 R$500 no Pix! No Desafio do Asfalto, meu título foi ${classificacao.id} — acertei ${acertos}/10. Faz melhor?`,
           files: [arquivo]
         });
         return;
