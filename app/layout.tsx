@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: "Você acha que manda na estrada? Testa aí.",
     siteName: "@Zedagraxa.oficial",
     type: "website",
-    images: [{ url: "/post-instagram-zedagraxa-quiz.png" }]
+    images: [{ url: "/post-instagram-zedagraxa-quiz.png", width: 1632, height: 2176, alt: "Desafio do Asfalto" }]
   },
   twitter: {
     card: "summary_large_image",
