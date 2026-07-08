@@ -252,7 +252,9 @@ export default function Home() {
     await registrarResultado(true);
     const janela = window.open(href, "_blank", "noopener,noreferrer");
     if (!janela) {
-      console.error("[compartilhar] window.open foi bloqueado (retornou null)");
+      alert("window.open bloqueado (retornou null)");
+    } else {
+      alert("window.open funcionou, retornou uma janela válida");
     }
   }
 
@@ -275,7 +277,9 @@ export default function Home() {
 
     const janelaFallback = window.open("", "_blank");
     if (!janelaFallback) {
-      console.error("[compartilhar] window.open foi bloqueado (retornou null)");
+      alert("window.open bloqueado (retornou null)");
+    } else {
+      alert("window.open funcionou, retornou uma janela válida");
     }
 
     try {
