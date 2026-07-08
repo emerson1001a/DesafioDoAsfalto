@@ -250,7 +250,10 @@ export default function Home() {
 
   async function compartilharWhatsapp(href: string) {
     await registrarResultado(true);
-    window.open(href, "_blank", "noopener,noreferrer");
+    const janela = window.open(href, "_blank", "noopener,noreferrer");
+    if (!janela) {
+      console.error("[compartilhar] window.open foi bloqueado (retornou null)");
+    }
   }
 
   async function salvarImagem() {
@@ -271,6 +274,9 @@ export default function Home() {
     }
 
     const janelaFallback = window.open("", "_blank");
+    if (!janelaFallback) {
+      console.error("[compartilhar] window.open foi bloqueado (retornou null)");
+    }
 
     try {
       const resposta = await fetch(cardUrl);
