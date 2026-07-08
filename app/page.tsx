@@ -249,13 +249,12 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp(href: string) {
-    alert("cliquei no botão");
+    const janela = window.open("", "_blank", "noopener,noreferrer");
     await registrarResultado(true);
-    const janela = window.open(href, "_blank", "noopener,noreferrer");
-    if (!janela) {
-      alert("window.open bloqueado (retornou null)");
+    if (janela) {
+      janela.location.href = href;
     } else {
-      alert("window.open funcionou, retornou uma janela válida");
+      console.error("[compartilharWhatsapp] popup bloqueado");
     }
   }
 
@@ -271,17 +270,10 @@ export default function Home() {
   }
 
   async function compartilharStories() {
-    alert("cliquei no botão");
+    const janelaFallback = window.open("", "_blank");
     const registrou = await registrarResultado(true);
     if (!registrou) {
       console.error("[compartilharStories] falha ao registrar compartilhamento");
-    }
-
-    const janelaFallback = window.open("", "_blank");
-    if (!janelaFallback) {
-      alert("window.open bloqueado (retornou null)");
-    } else {
-      alert("window.open funcionou, retornou uma janela válida");
     }
 
     try {
