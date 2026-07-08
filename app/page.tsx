@@ -401,9 +401,7 @@ export default function Home() {
                   </p>
                 ) : null}
                 <p className="mt-4 text-base font-bold text-stone-200">{classificacao.texto}</p>
-                <p className="mt-4 rounded-xl border border-gold/25 bg-black/35 p-3 text-sm font-bold text-gold">
-                  Inscreva-se no canal @ZedaGraxa.oficial para não perder os próximos quizzes.
-                </p>
+
               </div>
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
