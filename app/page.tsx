@@ -249,9 +249,10 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp(href: string) {
-    const janela = window.open("", "_blank", "noopener,noreferrer");
+    const janela = window.open("", "_blank");
     await registrarResultado(true);
     if (janela) {
+      console.log("[compartilhar] janela válida?", !!janela, "closed?", janela?.closed, "destino:", href);
       janela.location.href = href;
     } else {
       console.error("[compartilharWhatsapp] popup bloqueado");
@@ -295,6 +296,7 @@ export default function Home() {
     }
 
     if (janelaFallback) {
+      console.log("[compartilhar] janela válida?", !!janelaFallback, "closed?", janelaFallback?.closed, "destino:", cardUrl);
       janelaFallback.location.href = cardUrl;
       return;
     }
