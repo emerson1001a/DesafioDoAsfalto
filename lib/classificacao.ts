@@ -17,7 +17,7 @@ export type Classificacao = {
 };
 
 export function obterClassificacao(pontuacao: number): Classificacao {
-  if (pontuacao >= 9) {
+  if (pontuacao >= 5) {
     return {
       id: "REI DA ESTRADA",
       emoji: "👑",
@@ -30,7 +30,7 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     };
   }
 
-  if (pontuacao >= 7) {
+  if (pontuacao >= 4) {
     return {
       id: "LOBO RODADO",
       emoji: "🐺",
@@ -43,7 +43,7 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     };
   }
 
-  if (pontuacao >= 5) {
+  if (pontuacao >= 3) {
     return {
       id: "FRETE CERTO",
       emoji: "🎯",
@@ -56,7 +56,7 @@ export function obterClassificacao(pontuacao: number): Classificacao {
     };
   }
 
-  if (pontuacao >= 3) {
+  if (pontuacao >= 2) {
     return {
       id: "NOVATO NO ASFALTO",
       emoji: "🛞",
@@ -85,7 +85,7 @@ export type RankingInfo = { posicao: number; total: number };
 
 function textoCompartilhar(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo): string {
   const colocacao = ranking ? ` e fiquei em ${ranking.posicao}º lugar` : "";
-  return `🏆 *R$500 NO PIX!* No Desafio do Asfalto, meu título foi ${classificacao} — acertei ${pontuacao}/10${colocacao}. Faz melhor? ${url}`;
+  return `🏆 *R$500 NO PIX!* No Desafio do Asfalto, meu título foi ${classificacao} — acertei ${pontuacao}/5${colocacao}. Faz melhor? ${url}`;
 }
 
 export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo): string {

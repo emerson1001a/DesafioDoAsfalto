@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const nome = searchParams.get("nome")?.slice(0, 32) || "Você";
   const instagram = searchParams.get("instagram")?.slice(0, 32) || "";
-  const pontuacao = Math.max(0, Math.min(10, Number(searchParams.get("score") || 0)));
+  const pontuacao = Math.max(0, Math.min(5, Number(searchParams.get("score") || 0)));
   const classificacao = obterClassificacao(pontuacao);
   const imagemPassageiro = new URL("/images/passageiro-carona.png", request.url).toString();
   const usarImagemPassageiro = classificacao.fundo === "passageiro";
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
         >
           <div style={{ display: "flex", fontSize: "56px", fontWeight: 800 }}>{nome}</div>
           <div style={{ display: "flex", fontSize: "126px", lineHeight: 1, fontWeight: 950, letterSpacing: "-2px" }}>
-            {pontuacao} DE 10
+            {pontuacao} DE 5
           </div>
           <div
             style={{

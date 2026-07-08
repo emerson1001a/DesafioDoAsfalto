@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo, type RankingInfo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
-import { perguntas, type Alternativa, type Pergunta } from "@/lib/perguntas";
+import { CONJUNTO_ATIVO, perguntasConjuntoA, perguntasConjuntoB, type Alternativa, type Pergunta } from "@/lib/perguntas";
 import { montarPayloadResultado } from "@/lib/resultado";
 
 type PerguntaSessao = Pergunta & { alternativasEmbaralhadas: Alternativa[] };
@@ -13,7 +13,8 @@ const tentativaKey = "desafio-asfalto-tentativas";
 const resultadoIdKey = "desafio-asfalto-resultado-id";
 
 function criarSessao(): PerguntaSessao[] {
-  return embaralhar(perguntas).map((pergunta) => ({
+  const perguntasAtivas = CONJUNTO_ATIVO === "A" ? perguntasConjuntoA : perguntasConjuntoB;
+  return embaralhar(perguntasAtivas).map((pergunta) => ({
     ...pergunta,
     alternativasEmbaralhadas: embaralhar(pergunta.alternativas)
   }));
@@ -286,7 +287,7 @@ export default function Home() {
         janelaFallback?.close();
         await navigator.share({
           title: "Desafio do Asfalto",
-          text: `🏆 R$500 no Pix! No Desafio do Asfalto, meu título foi ${classificacao.id} — acertei ${acertos}/10. Faz melhor?`,
+          text: `🏆 R$500 no Pix! No Desafio do Asfalto, meu título foi ${classificacao.id} — acertei ${acertos}/${sessao.length}. Faz melhor?`,
           files: [arquivo]
         });
         return;
@@ -321,7 +322,7 @@ export default function Home() {
             <div className="brand-title text-2xl text-gold">Desafio do Asfalto</div>
             <div className="text-xs uppercase tracking-[.24em] text-stone-400">por @zedagraxa.oficial</div>
           </div>
-          {tela === "quiz" && <div className="rounded-full bg-stone-900 px-3 py-1 text-sm font-black text-gold">{indice + 1}/10</div>}
+          {tela === "quiz" && <div className="rounded-full bg-stone-900 px-3 py-1 text-sm font-black text-gold">{indice + 1}/{sessao.length}</div>}
         </header>
 
         {tela === "entrada" && (
@@ -349,7 +350,7 @@ export default function Home() {
               />
             </div>
 
-            <p className="mb-2 text-sm font-black uppercase text-gold">Pergunta {indice + 1} de 10</p>
+            <p className="mb-2 text-sm font-black uppercase text-gold">Pergunta {indice + 1} de {sessao.length}</p>
             <h2 className="text-[1.4rem] font-black leading-tight text-white">{perguntaAtual.pergunta}</h2>
 
             <div className="mt-6 space-y-3">
@@ -391,7 +392,7 @@ export default function Home() {
               <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
                 <p className="text-sm font-black uppercase text-gold">Resultado final</p>
                 <h1 className="brand-title mt-3 text-[2.75rem] leading-none text-white">{classificacao.titulo}</h1>
-                <p className="mt-3 text-[2.15rem] font-black text-gold">{acertos} de 10</p>
+                <p className="mt-3 text-[2.15rem] font-black text-gold">{acertos} de {sessao.length}</p>
                 {carregandoRanking ? (
                   <p className="mt-1 text-sm font-bold text-stone-500">calculando sua posição...</p>
                 ) : ranking ? (

@@ -12,7 +12,11 @@ export type Pergunta = {
   textoErrou: string;
 };
 
-export const perguntas: Pergunta[] = [
+// Para trocar o conjunto de perguntas (ex.: segundo sorteio),
+// troque este valor para "B" e faça deploy.
+export const CONJUNTO_ATIVO: "A" | "B" = "A";
+
+export const perguntasConjuntoA: Pergunta[] = [
   {
     id: 1,
     pergunta: "Um caminhão trucado (6x2) está plenamente carregado e o motorista percebe que o freio está 'mole', exigindo mais força no pedal. Qual é a causa MAIS PROVÁVEL desse sintoma?",
@@ -78,6 +82,9 @@ export const perguntas: Pergunta[] = [
     textoAcertou: "Acertou e salvou o motor! Água leitosa com espuma é óleo no circuito de arrefecimento - quase sempre junta do cabeçote. Quanto mais cedo pega, menos dinheiro perde. Ignorar esse sinal é assinar um cheque em branco pra oficina.",
     textoErrou: "Água vencida fica amarelada ou enferrujada - não leitosa e espumosa. Quando está assim é óleo no circuito. Quase sempre é junta do cabeçote. Qualquer mecânico de beira de estrada que já viu isso reconhece na hora. Você ainda ia rodar com isso?"
   },
+];
+
+export const perguntasConjuntoB: Pergunta[] = [
   {
     id: 6,
     pergunta: "Um caminhão está consumindo muito mais diesel que o normal, mas a fumaça está normal - nem preta, nem azul, nem branca. Marque a causa MENOS provável entre as opções:",
@@ -142,5 +149,5 @@ export const perguntas: Pergunta[] = [
     correta: "B",
     textoAcertou: "Veterano de verdade! O truque do aquecedor no máximo é o que separa quem aprendeu na prática de quem só acha que sabe. Usa o calor do motor como dissipador extra - funciona. E nunca, NUNCA abre o radiador quente. Isso não é conselho, é lei da física.",
     textoErrou: "Abrir o radiador com motor quente é garantia de explosão de vapor na cara. Acontece de verdade e deixa marca. Continuar rodando destroça o motor. Certo: reduz a velocidade, liga o aquecedor no talo e acha um lugar seguro. Depois espera. Pressa aqui sai caro."
-  }
+  },
 ];
