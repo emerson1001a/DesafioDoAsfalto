@@ -10,6 +10,7 @@ type PerguntaSessao = Pergunta & { alternativasEmbaralhadas: Alternativa[] };
 type Tela = "entrada" | "quiz" | "resultado";
 
 const tentativaKey = "desafio-asfalto-tentativas";
+const resultadoIdKey = "desafio-asfalto-resultado-id";
 
 function criarSessao(): PerguntaSessao[] {
   return embaralhar(perguntas).map((pergunta) => ({
@@ -70,6 +71,11 @@ export default function Home() {
     }
   }, [tela]);
 
+  useEffect(() => {
+    const idSalvo = sessionStorage.getItem(resultadoIdKey);
+    if (idSalvo) resultadoIdRef.current = idSalvo;
+  }, []);
+
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
   const nomeCard = nomeCompartilhar.trim() || "Motorista";
@@ -85,6 +91,7 @@ export default function Home() {
   const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
   function iniciar() {
+    const novoId = crypto.randomUUID();
     const tentativas = Number(localStorage.getItem(tentativaKey) || "0") + 1;
     localStorage.setItem(tentativaKey, String(tentativas));
     setTentativa(tentativas);
@@ -95,8 +102,9 @@ export default function Home() {
     setErros([]);
     setRegistroOk(null);
     setErroRegistro("");
-    setResultadoId(null);
-    resultadoIdRef.current = null;
+    setResultadoId(novoId);
+    resultadoIdRef.current = novoId;
+    sessionStorage.setItem(resultadoIdKey, novoId);
     setSorteioOk(false);
     setErroSorteio("");
     setNomeSorteio("");
@@ -168,6 +176,7 @@ export default function Home() {
       if (resposta.ok && dados.id) {
         resultadoIdRef.current = dados.id;
         setResultadoId(dados.id);
+        sessionStorage.setItem(resultadoIdKey, dados.id);
       }
       if (!resposta.ok) {
         setErroRegistro(dados.erro || "Erro sem detalhe");
@@ -220,15 +229,15 @@ export default function Home() {
       : 0;
     tempoSegundosRef.current = tempo;
     setTela("resultado");
-    setTimeout(() => {
-      void registrarResultado(false).then((ok) => {
-        if (ok) void buscarRanking(acertos, tempo);
-      });
+    setTimeout(async () => {
+      const ok = await registrarResultado(false);
+      if (ok) await buscarRanking(acertos, tempo);
     }, 0);
   }
 
-  function registrarCompartilhamento() {
-    void registrarResultado(true);
+  async function compartilharWhatsapp(href: string) {
+    await registrarResultado(true);
+    window.open(href, "_blank", "noopener,noreferrer");
   }
 
   async function salvarImagem() {
@@ -243,7 +252,10 @@ export default function Home() {
   }
 
   async function compartilharStories() {
-    void registrarResultado(true);
+    const registrou = await registrarResultado(true);
+    if (!registrou) {
+      console.error("[compartilharStories] falha ao registrar compartilhamento");
+    }
 
     const janelaFallback = window.open("", "_blank");
 
@@ -388,6 +400,7 @@ export default function Home() {
                       onChange={(event) => setNomeSorteio(event.target.value)}
                       disabled={sorteioOk || salvandoSorteio}
                       autoCorrect="off"
+                      autoComplete="off"
                       spellCheck={false}
                       className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
                       placeholder="Ex.: Paulo"
@@ -460,24 +473,18 @@ export default function Home() {
               <button onClick={() => setModal(false)} className="rounded-lg bg-stone-800 px-3 py-2 font-black">X</button>
             </div>
             <div className="grid gap-3">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={registrarCompartilhamento}
+              <button
+                onClick={() => void compartilharWhatsapp(whatsappHref)}
                 className="rounded-xl bg-emerald-950 px-5 py-4 text-center font-black uppercase text-emerald-50 ring-1 ring-emerald-700"
               >
                 Mandar nos grupos de WhatsApp
-              </a>
-              <a
-                href={whatsappIndividualHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={registrarCompartilhamento}
+              </button>
+              <button
+                onClick={() => void compartilharWhatsapp(whatsappIndividualHref)}
                 className="rounded-xl border border-emerald-700 px-5 py-4 text-center font-black uppercase text-emerald-100"
               >
                 Desafiar um parceiro direto
-              </a>
+              </button>
               <button
                 onClick={() => setMostrarCamposInstagram((v) => !v)}
                 className="rounded-xl bg-brake px-5 py-4 font-black uppercase"

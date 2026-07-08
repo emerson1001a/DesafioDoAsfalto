@@ -26,10 +26,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, erro: "Pontuação inválida" }, { status: 400 });
     }
 
-    const id = typeof body.id === "string" ? body.id : null;
-    // Para INSERT: gera UUID aqui para poder retornar ao cliente sem precisar de SELECT
-    // (SELECT após INSERT falha com anon key quando RLS bloqueia leitura)
-    const registroId = id ?? randomUUID();
+    // UUID vem do cliente para idempotência; gera no servidor apenas como fallback
+    const registroId = typeof body.id === "string" && body.id.length > 0 ? body.id : randomUUID();
+
     const payload: Record<string, unknown> = {
       id: registroId,
       classificacao: String(body.classificacao || ""),
@@ -38,41 +37,33 @@ export async function POST(request: NextRequest) {
       origem: typeof body.origem === "string" ? body.origem.slice(0, 80) : null,
       tentativa_numero: Number.isInteger(tentativa) && tentativa > 0 ? tentativa : 1,
       erros,
-      sorteio_participa: Boolean(body.sorteio_participa),
-      sorteio_nome: typeof body.sorteio_nome === "string" ? body.sorteio_nome.slice(0, 120) : null,
-      sorteio_telefone: typeof body.sorteio_telefone === "string" ? body.sorteio_telefone.slice(0, 40) : null
     };
-    // Só inclui tempo_segundos se existir — evita erro caso a coluna ainda não exista no banco
+    // Sorteio só entra no payload quando sorteio_participa=true — evita sobrescrever
+    // dados de sorteio já gravados em upserts subsequentes sem esses campos
+    if (Boolean(body.sorteio_participa)) {
+      payload.sorteio_participa = true;
+      payload.sorteio_nome = typeof body.sorteio_nome === "string" ? body.sorteio_nome.slice(0, 120) : null;
+      payload.sorteio_telefone = typeof body.sorteio_telefone === "string" ? body.sorteio_telefone.slice(0, 40) : null;
+    }
+    // Tempo só entra se existir — evita erro caso a coluna ainda não exista no banco
     if (tempoSegundos !== null) payload.tempo_segundos = tempoSegundos;
 
-    const url = id
-      ? `${SUPABASE_URL}/rest/v1/${tabelaResultados}?id=eq.${encodeURIComponent(id)}`
-      : `${SUPABASE_URL}/rest/v1/${tabelaResultados}`;
-
-    const resposta = await fetch(url, {
-      method: id ? "PATCH" : "POST",
+    // Upsert idempotente: reenviar o mesmo UUID sempre cai na mesma linha, nunca cria duplicata
+    const resposta = await fetch(`${SUPABASE_URL}/rest/v1/${tabelaResultados}`, {
+      method: "POST",
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json",
-        Prefer: id ? "return=minimal,count=exact" : "return=minimal"
+        Prefer: "return=minimal,resolution=merge-duplicates",
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     if (!resposta.ok) {
       const detalhe = await resposta.text();
       console.error("[registrar] Supabase erro", resposta.status, detalhe);
       return NextResponse.json({ ok: false, erro: detalhe }, { status: 500 });
-    }
-
-    if (id) {
-      const contentRange = resposta.headers.get("content-range");
-      const total = contentRange ? Number(contentRange.split("/")[1]) : NaN;
-      if (!(total > 0)) {
-        console.error("[registrar] PATCH não encontrou registro id=", id);
-        return NextResponse.json({ ok: false, erro: "Registro não encontrado para atualizar" }, { status: 404 });
-      }
     }
 
     return NextResponse.json({ ok: true, id: registroId });
