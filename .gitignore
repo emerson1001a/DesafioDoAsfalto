@@ -6,3 +6,6 @@ out
 dist
 *.log
 tsconfig.tsbuildinfo
+
+.vercel
+.env*
