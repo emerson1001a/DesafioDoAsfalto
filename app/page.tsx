@@ -249,6 +249,7 @@ export default function Home() {
   }
 
   async function compartilharWhatsapp(href: string) {
+    alert("cliquei no botão");
     await registrarResultado(true);
     const janela = window.open(href, "_blank", "noopener,noreferrer");
     if (!janela) {
@@ -270,6 +271,7 @@ export default function Home() {
   }
 
   async function compartilharStories() {
+    alert("cliquei no botão");
     const registrou = await registrarResultado(true);
     if (!registrou) {
       console.error("[compartilharStories] falha ao registrar compartilhamento");
