@@ -1,22 +1,27 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+// Ao trocar a imagem no futuro, incremente o "v" (ex: ?v=3) para
+// forçar WhatsApp/Facebook a buscarem a versão nova, sem depender
+// de cache expirar sozinho.
+const ogImage = "/post-instagram-zedagraxa-quiz.png?v=2";
+
 export const metadata: Metadata = {
   title: "Desafio do Asfalto",
   applicationName: "@Zedagraxa.oficial",
-  description: "7 em cada 10 caminhoneiros erram pelo menos 3. Será que você passa?",
+  description: "POR @ZEDAGRAXA.OFICIAL",
   openGraph: {
     title: "Desafio do Asfalto",
-    description: "Você acha que manda na estrada? Testa aí.",
+    description: "POR @ZEDAGRAXA.OFICIAL",
     siteName: "@Zedagraxa.oficial",
     type: "website",
-    images: [{ url: "/post-instagram-zedagraxa-quiz.png", width: 1632, height: 2176, alt: "Desafio do Asfalto" }]
+    images: [{ url: ogImage, width: 1632, height: 2176, alt: "Desafio do Asfalto" }]
   },
   twitter: {
     card: "summary_large_image",
     title: "Desafio do Asfalto",
-    description: "Você acha que manda na estrada? Testa aí! @Zedagraxa.oficial",
-    images: ["/post-instagram-zedagraxa-quiz.png"]
+    description: "POR @ZEDAGRAXA.OFICIAL",
+    images: [ogImage]
   }
 };
 
