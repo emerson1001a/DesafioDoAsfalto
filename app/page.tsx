@@ -85,10 +85,10 @@ export default function Home() {
   const instagramCard = incluirInstagram && instagramLimpo ? (instagramLimpo.startsWith("@") ? instagramLimpo : `@${instagramLimpo}`) : "";
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
   const origemUrl = typeof window === "undefined" ? "" : window.location.origin + window.location.pathname;
-  const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo` : "";
+  const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo&cb=2` : "";
   const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl, ranking ?? undefined);
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(textoGrupo)}`;
-  const whatsappIndividualUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_individual` : "";
+  const whatsappIndividualUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_individual&cb=2` : "";
   const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl, ranking ?? undefined);
   const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
