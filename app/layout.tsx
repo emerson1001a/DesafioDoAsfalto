@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import MetaPixel from "./MetaPixel";
 
 // Ao trocar a imagem no futuro, incremente o "v" (ex: ?v=3) para
 // forçar WhatsApp/Facebook a buscarem a versão nova, sem depender
@@ -36,7 +37,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className="scroll-smooth">
-      <body>{children}</body>
+      <body>
+        {children}
+        <MetaPixel />
+      </body>
     </html>
   );
 }

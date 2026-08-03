@@ -33,6 +33,11 @@ const secoes = [
       "Ao deixar seu WhatsApp, você concorda em receber mensagens sobre o andamento do Desafio do Asfalto — como sua posição no ranking, resultado dos sorteios e avisos importantes. Esse contato também pode ser usado para apresentar novidades e ferramentas do ecossistema Rode com Lucro, voltadas pra facilitar a vida de quem roda na estrada."
   },
   {
+    titulo: "Privacidade e medição de anúncios",
+    texto:
+      "Com sua autorização no aviso de privacidade, usamos tecnologias da Meta para medir visitas, início e conclusão do quiz, compartilhamentos e inscrições originadas por anúncios. A autorização é opcional: quem recusar continua podendo usar o quiz. Quando autorizada, a inscrição pode ser informada à Meta pelo navegador e pelo servidor, com identificadores protegidos por criptografia, para medir a campanha sem contar o mesmo cadastro duas vezes."
+  },
+  {
     titulo: "Jogo limpo",
     texto:
       "A organização pode desclassificar respostas com tempo incompatível com leitura humana, números de WhatsApp inválidos ou inexistentes, e qualquer uso de robôs, scripts ou automação para responder o quiz."
