@@ -498,6 +498,23 @@ export default function Home() {
 
                 <p className="text-base font-bold text-stone-200">{classificacao.texto}</p>
 
+                <div className="rounded-xl border border-fuchsia-500/40 bg-fuchsia-950/30 p-4 text-center">
+                  <p className="font-black text-white">Acompanhe o Zé da Graxa no Instagram</p>
+                  <p className="mt-1 text-sm font-bold text-stone-300">
+                    Siga para acompanhar o sorteio, os resultados e os próximos desafios.
+                  </p>
+                  <a
+                    href="https://www.instagram.com/zedagraxa.oficial/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => rastrearMeta("InstagramProfileClick", { posicao: "resultado_quiz" })}
+                    className="mt-3 block rounded-xl bg-gradient-to-r from-fuchsia-600 via-rose-500 to-amber-500 px-5 py-4 font-black uppercase text-white shadow-lg"
+                  >
+                    Seguir @zedagraxa.oficial
+                  </a>
+                  <p className="mt-2 text-[11px] text-stone-500">Sua participação no sorteio não depende de seguir o perfil.</p>
+                </div>
+
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
                   Desafiar os parceiros
                 </button>
