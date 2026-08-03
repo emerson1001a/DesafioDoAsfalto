@@ -50,6 +50,8 @@ export async function GET(request: NextRequest) {
         }}
       >
         {usarImagemPassageiro && (
+          // A imagem é renderizada pelo Satori no servidor, não pelo navegador.
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={imagemPassageiro}
             alt=""
