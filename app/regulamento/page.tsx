@@ -10,7 +10,7 @@ const secoes = [
   {
     titulo: "Duração e prêmios",
     texto:
-      "O Desafio do Asfalto fica no ar por 1 mês. O sorteio e o fechamento do ranking acontecem no dia 30 de julho de 2026. São R$ 250 sorteados entre os participantes e R$ 250 para quem ficar em 1º no ranking geral, definido pelo número de acertos e, em caso de empate, pelo menor tempo de realização do quiz."
+      "As inscrições do Desafio do Asfalto acontecem de 15 de agosto de 2026, à 0h, até 15 de setembro de 2026, às 23h59, no horário de Brasília. O sorteio e a apuração final do ranking acontecem em 20 de setembro de 2026. São R$ 250 sorteados entre os participantes e R$ 250 para quem ficar em 1º no ranking geral, definido pelo número de acertos e, em caso de empate, pelo menor tempo de realização do quiz."
   },
   {
     titulo: "Quem pode participar",

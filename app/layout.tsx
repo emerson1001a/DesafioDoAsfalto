@@ -7,6 +7,7 @@ import "./globals.css";
 const ogImage = "/post-instagram-zedagraxa-quiz.png?v=2";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://desafio-do-asfalto.vercel.app"),
   title: "Desafio do Asfalto",
   applicationName: "@Zedagraxa.oficial",
   description: "POR @ZEDAGRAXA.OFICIAL",

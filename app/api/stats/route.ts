@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { tabelaResultados } from "@/lib/supabase-config";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const STATS_API_KEY = process.env.STATS_API_KEY;
 
 type Resultado = {
   classificacao: string;
@@ -10,7 +11,11 @@ type Resultado = {
   erros: number[] | null;
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const autorizacao = request.headers.get("authorization");
+  if (!STATS_API_KEY || autorizacao !== `Bearer ${STATS_API_KEY}`) {
+    return NextResponse.json({ ok: false }, { status: 404 });
+  }
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return NextResponse.json({ ok: false, erro: "Supabase não configurado" }, { status: 500 });
   }
@@ -27,7 +32,8 @@ export async function GET() {
   );
 
   if (!resposta.ok) {
-    return NextResponse.json({ ok: false, erro: await resposta.text() }, { status: 500 });
+    console.error("[stats] Supabase respondeu", resposta.status, await resposta.text());
+    return NextResponse.json({ ok: false }, { status: 502 });
   }
 
   const dados = (await resposta.json()) as Resultado[];
@@ -63,5 +69,5 @@ export async function GET() {
       ? { pergunta_id: Number(perguntaMaiorErro[0]), erros: perguntaMaiorErro[1] }
       : null,
     percentual_usuarios_que_compartilharam: total ? Number(((compartilhamentos / total) * 100).toFixed(1)) : 0
-  });
+  }, { headers: { "Cache-Control": "no-store" } });
 }

@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { obterStatusCampanha, type StatusCampanha } from "@/lib/campanha";
 import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo, type RankingInfo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { CONJUNTO_ATIVO, perguntasConjuntoA, perguntasConjuntoB, type Alternativa, type Pergunta } from "@/lib/perguntas";
-import { montarPayloadResultado } from "@/lib/resultado";
 
 type PerguntaSessao = Pergunta & { alternativasEmbaralhadas: Alternativa[] };
+type RespostaQuiz = { pergunta_id: number; alternativa_id: string };
 type Tela = "entrada" | "quiz" | "resultado";
 
 const tentativaKey = "desafio-asfalto-tentativas";
-const resultadoIdKey = "desafio-asfalto-resultado-id";
 
 function criarSessao(): PerguntaSessao[] {
   const perguntasAtivas = CONJUNTO_ATIVO === "A" ? perguntasConjuntoA : perguntasConjuntoB;
@@ -22,22 +22,21 @@ function criarSessao(): PerguntaSessao[] {
 
 export default function Home() {
   const feedbackRef = useRef<HTMLDivElement | null>(null);
-  const tempoInicioRef = useRef<number>(0);
-  const tempoSegundosRef = useRef<number>(0);
-  const resultadoIdRef = useRef<string | null>(null);
+  const sessaoTokenRef = useRef<string | null>(null);
   const motorRef = useRef<HTMLAudioElement | null>(null);
   const [tela, setTela] = useState<Tela>("entrada");
   const [sessao, setSessao] = useState<PerguntaSessao[]>([]);
   const [indice, setIndice] = useState(0);
   const [selecionada, setSelecionada] = useState<string | null>(null);
   const [acertos, setAcertos] = useState(0);
-  const [erros, setErros] = useState<number[]>([]);
+  const [respostas, setRespostas] = useState<RespostaQuiz[]>([]);
   const [origem, setOrigem] = useState<string | null>(null);
   const [tentativa, setTentativa] = useState(1);
+  const [iniciando, setIniciando] = useState(false);
   const [registrando, setRegistrando] = useState(false);
   const [registroOk, setRegistroOk] = useState<boolean | null>(null);
-  const [erroRegistro, setErroRegistro] = useState("");
   const [resultadoId, setResultadoId] = useState<string | null>(null);
+  const [erroRegistro, setErroRegistro] = useState("");
   const [incluirInstagram, setIncluirInstagram] = useState(false);
   const [modal, setModal] = useState(false);
   const [mostrarCamposInstagram, setMostrarCamposInstagram] = useState(false);
@@ -48,12 +47,16 @@ export default function Home() {
   const [salvandoSorteio, setSalvandoSorteio] = useState(false);
   const [sorteioOk, setSorteioOk] = useState(false);
   const [erroSorteio, setErroSorteio] = useState("");
+  const [statusCampanha, setStatusCampanha] = useState<StatusCampanha>("aguardando");
   const [ranking, setRanking] = useState<RankingInfo | null>(null);
   const [carregandoRanking, setCarregandoRanking] = useState(false);
 
   useEffect(() => {
     const parametros = new URLSearchParams(window.location.search);
     setOrigem(parametros.get("utm_source"));
+    setStatusCampanha(obterStatusCampanha());
+    const timer = window.setInterval(() => setStatusCampanha(obterStatusCampanha()), 60_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -73,11 +76,6 @@ export default function Home() {
     }
   }, [tela]);
 
-  useEffect(() => {
-    const idSalvo = sessionStorage.getItem(resultadoIdKey);
-    if (idSalvo) resultadoIdRef.current = idSalvo;
-  }, []);
-
   const perguntaAtual = sessao[indice];
   const classificacao = useMemo(() => obterClassificacao(acertos), [acertos]);
   const nomeCard = nomeCompartilhar.trim() || "Motorista";
@@ -92,8 +90,20 @@ export default function Home() {
   const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl, ranking ?? undefined);
   const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
-  function iniciar() {
-    const novoId = crypto.randomUUID();
+  async function iniciar() {
+    if (iniciando) return;
+    setIniciando(true);
+    setErroRegistro("");
+
+    try {
+      const respostaSessao = await fetch("/api/sessao", { method: "POST" });
+      const dadosSessao = await respostaSessao.json().catch(() => ({}));
+      if (!respostaSessao.ok || typeof dadosSessao.token !== "string") {
+        setErroRegistro("Não foi possível iniciar uma sessão segura. Tente novamente.");
+        return;
+      }
+      sessaoTokenRef.current = dadosSessao.token;
+
     const tentativas = Number(localStorage.getItem(tentativaKey) || "0") + 1;
     localStorage.setItem(tentativaKey, String(tentativas));
     setTentativa(tentativas);
@@ -101,39 +111,39 @@ export default function Home() {
     setIndice(0);
     setSelecionada(null);
     setAcertos(0);
-    setErros([]);
+    setRespostas([]);
     setRegistroOk(null);
+    setResultadoId(null);
     setErroRegistro("");
-    setResultadoId(novoId);
-    resultadoIdRef.current = novoId;
-    sessionStorage.setItem(resultadoIdKey, novoId);
+    setModal(false);
     setSorteioOk(false);
     setErroSorteio("");
     setNomeSorteio("");
     setTelefoneSorteio("");
-    setModal(false);
     setRanking(null);
     setCarregandoRanking(false);
-    tempoInicioRef.current = Date.now();
-    tempoSegundosRef.current = 0;
     setTela("quiz");
+    } catch {
+      setErroRegistro("Falha de conexão ao iniciar o quiz.");
+    } finally {
+      setIniciando(false);
+    }
   }
 
   function responder(alternativaId: string) {
     if (selecionada || !perguntaAtual) return;
     setSelecionada(alternativaId);
+    setRespostas((lista) => [...lista, { pergunta_id: perguntaAtual.id, alternativa_id: alternativaId }]);
     const acertou = alternativaId === perguntaAtual.correta;
     if (acertou) {
       setAcertos((valor) => valor + 1);
-    } else {
-      setErros((lista) => [...lista, perguntaAtual.id]);
     }
   }
 
-  async function buscarRanking(pontuacao: number, tempo: number) {
+  async function buscarRanking(id: string) {
     setCarregandoRanking(true);
     try {
-      const resposta = await fetch(`/api/ranking?pontuacao=${pontuacao}&tempo=${tempo}`);
+      const resposta = await fetch(`/api/ranking?id=${encodeURIComponent(id)}`);
       if (resposta.ok) {
         const dados = await resposta.json();
         if (dados.ok) setRanking({ posicao: dados.posicao, total: dados.total });
@@ -145,26 +155,15 @@ export default function Home() {
     }
   }
 
-  async function registrarResultado(compartilhou = false, dadosSorteio?: { nome: string; telefone: string }) {
-    if (registrando) return false;
+  async function registrarResultado(compartilhou = false): Promise<string | null> {
+    if (registrando) return resultadoId;
     setRegistrando(true);
     const payload = {
-      ...montarPayloadResultado({
-      pontuacao: acertos,
+      sessao_token: sessaoTokenRef.current,
+      respostas,
       compartilhou,
       origem,
-      tentativaNumero: tentativa,
-      erros,
-      tempoSegundos: tempoSegundosRef.current || undefined
-      }),
-      ...(dadosSorteio
-        ? {
-            sorteio_participa: true,
-            sorteio_nome: dadosSorteio.nome,
-            sorteio_telefone: dadosSorteio.telefone
-          }
-        : {}),
-      id: resultadoIdRef.current
+      tentativa_numero: tentativa,
     };
 
     try {
@@ -175,19 +174,17 @@ export default function Home() {
       });
       const dados = await resposta.json().catch(() => ({}));
       setRegistroOk(resposta.ok);
-      if (resposta.ok && dados.id) {
-        resultadoIdRef.current = dados.id;
-        setResultadoId(dados.id);
-        sessionStorage.setItem(resultadoIdKey, dados.id);
-      }
       if (!resposta.ok) {
         setErroRegistro(dados.erro || "Erro sem detalhe");
+        return null;
       }
-      return resposta.ok;
+      const id = typeof dados.id === "string" ? dados.id : null;
+      setResultadoId(id);
+      return id;
     } catch {
       setRegistroOk(false);
       setErroRegistro("Falha de conexão com a API");
-      return false;
+      return null;
     } finally {
       setRegistrando(false);
     }
@@ -197,38 +194,56 @@ export default function Home() {
     const audio = motorRef.current;
     if (!audio) return;
     audio.currentTime = 0;
-    audio.play().catch((err) => console.error("[som] falha ao tocar:", err));
-    setTimeout(() => {
+    audio.play().catch(() => undefined);
+    window.setTimeout(() => {
       audio.pause();
       audio.currentTime = 0;
     }, 4000);
   }
 
   async function salvarSorteio() {
-    const nomeLimpo = nomeSorteio.trim();
-    const telefoneLimpo = telefoneSorteio.trim();
-
+    const nome = nomeSorteio.trim();
+    const telefone = telefoneSorteio.trim();
     setErroSorteio("");
-
-    if (!nomeLimpo || !telefoneLimpo) {
-      setErroSorteio("Informe nome e telefone para participar do sorteio.");
+    if (statusCampanha !== "ativa") {
+      setErroSorteio("As inscrições ainda não estão abertas.");
       return;
     }
-
+    if (nome.length < 2 || telefone.replace(/\D/g, "").length < 10) {
+      setErroSorteio("Informe nome e telefone válidos.");
+      return;
+    }
     setSalvandoSorteio(true);
-    const salvou = await registrarResultado(false, {
-      nome: nomeLimpo,
-      telefone: telefoneLimpo
-    });
-    setSalvandoSorteio(false);
-
-    if (salvou) {
+    try {
+      const resposta = await fetch("/api/registrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessao_token: sessaoTokenRef.current,
+          respostas,
+          origem,
+          tentativa_numero: tentativa,
+          sorteio_participa: true,
+          sorteio_nome: nome,
+          sorteio_telefone: telefone,
+        }),
+      });
+      const dados = await resposta.json().catch(() => ({}));
+      if (!resposta.ok) {
+        setErroSorteio(dados.erro || "Não foi possível salvar agora.");
+        return;
+      }
       tocarMotor();
       setSorteioOk(true);
-      return;
+      if (typeof dados.id === "string") {
+        setResultadoId(dados.id);
+        await buscarRanking(dados.id);
+      }
+    } catch {
+      setErroSorteio("Falha de conexão. Tente novamente.");
+    } finally {
+      setSalvandoSorteio(false);
     }
-
-    setErroSorteio("Não consegui salvar agora. Tente novamente em alguns segundos.");
   }
 
   function proxima() {
@@ -238,14 +253,9 @@ export default function Home() {
       return;
     }
 
-    const tempo = tempoInicioRef.current > 0
-      ? Math.round((Date.now() - tempoInicioRef.current) / 1000)
-      : 0;
-    tempoSegundosRef.current = tempo;
     setTela("resultado");
     setTimeout(async () => {
-      const ok = await registrarResultado(false);
-      if (ok) await buscarRanking(acertos, tempo);
+      await registrarResultado(false);
     }, 0);
   }
 
@@ -287,7 +297,7 @@ export default function Home() {
         janelaFallback?.close();
         await navigator.share({
           title: "Desafio do Asfalto",
-          text: `🏆 R$500 no Pix! No Desafio do Asfalto, meu título foi ${classificacao.id} — acertei ${acertos}/${sessao.length}. Faz melhor?`,
+          text: `No Desafio do Asfalto, meu título foi ${classificacao.id} — acertei ${acertos}/${sessao.length}. Faz melhor?`,
           files: [arquivo]
         });
         return;
@@ -335,13 +345,20 @@ export default function Home() {
               Responda 5 perguntas e veremos...
             </p>
 
-            <button onClick={iniciar} className="gold-button mt-7 w-full rounded-xl px-5 py-5 text-xl font-black uppercase">
-              Aceitar o desafio
+            <button onClick={() => void iniciar()} disabled={iniciando} className="gold-button mt-7 w-full rounded-xl px-5 py-5 text-xl font-black uppercase disabled:opacity-60">
+              {iniciando ? "Preparando..." : "Aceitar o desafio"}
             </button>
 
             <div className="mt-4 rounded-xl border border-gold/40 bg-amber-950/60 px-4 py-3 text-center">
-              <p className="font-black uppercase tracking-wide text-gold">Concorra a PIX de R$ 500,00</p>
+              <p className="font-black uppercase tracking-wide text-gold">
+                {statusCampanha === "aguardando"
+                  ? "Inscrições para os prêmios a partir de 15/08"
+                  : statusCampanha === "ativa"
+                    ? "Concorra a R$ 500 em prêmios"
+                    : "Inscrições encerradas — sorteio em 20/09"}
+              </p>
             </div>
+            {erroRegistro && <p className="mt-3 text-center text-sm font-bold text-red-200">{erroRegistro}</p>}
           </section>
         )}
 
@@ -350,7 +367,7 @@ export default function Home() {
             <div className="mb-5 h-3 overflow-hidden rounded-full bg-stone-800">
               <div
                 className="h-full rounded-full bg-gold transition-all duration-500"
-                style={{ width: `${((indice + 1) / 10) * 100}%` }}
+                style={{ width: `${((indice + 1) / sessao.length) * 100}%` }}
               />
             </div>
 
@@ -409,54 +426,60 @@ export default function Home() {
               </div>
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
-                  <p className="brand-title text-4xl leading-none text-gold">Sorteio Pix de R$ 500</p>
-                  <h2 className="mt-2 text-xl font-black text-white">Quer concorrer e ainda desafiar seus amigos a te superar?</h2>
-                  <p className="mt-2 text-sm font-bold text-stone-300">
-                    Deixe seu nome e telefone para participar do sorteio. Se for sorteado, a gente entra em contato por WhatsApp.
-                  </p>
-
-                  <label className="mt-4 block">
-                    <span className="mb-1 block text-xs font-black uppercase text-stone-400">Nome</span>
-                    <input
-                      value={nomeSorteio}
-                      onChange={(event) => setNomeSorteio(event.target.value)}
-                      disabled={sorteioOk || salvandoSorteio}
-                      autoCorrect="off"
-                      autoComplete="off"
-                      spellCheck={false}
-                      className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
-                      placeholder="Ex.: Paulo"
-                    />
-                  </label>
-
-                  <label className="mt-3 block">
-                    <span className="mb-1 block text-xs font-black uppercase text-stone-400">Telefone ou WhatsApp</span>
-                    <input
-                      value={telefoneSorteio}
-                      onChange={(event) => setTelefoneSorteio(event.target.value)}
-                      disabled={sorteioOk || salvandoSorteio}
-                      inputMode="tel"
-                      className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold disabled:opacity-60"
-                      placeholder="Ex.: (11) 99999-9999"
-                    />
-                  </label>
-
-                  {sorteioOk ? (
-                    <p className="mt-3 rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-3 text-sm font-bold text-emerald-100">
-                      Pronto. Seu nome está no sorteio.
-                    </p>
+                  {statusCampanha === "ativa" ? (
+                    <>
+                      <p className="brand-title text-4xl leading-none text-gold">Concorra aos prêmios</p>
+                      <h2 className="mt-2 text-xl font-black text-white">Cadastre-se para o sorteio e para o ranking valendo Pix.</h2>
+                      {sorteioOk ? (
+                        <p className="mt-4 rounded-xl border border-emerald-600/50 bg-emerald-950/50 p-3 text-center font-black text-emerald-100">
+                          Inscrição confirmada. Boa sorte!
+                        </p>
+                      ) : (
+                        <div className="mt-4 grid gap-3">
+                          <input
+                            value={nomeSorteio}
+                            onChange={(event) => setNomeSorteio(event.target.value)}
+                            className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                            placeholder="Seu nome"
+                            autoComplete="name"
+                            maxLength={120}
+                          />
+                          <input
+                            value={telefoneSorteio}
+                            onChange={(event) => setTelefoneSorteio(event.target.value)}
+                            className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                            placeholder="WhatsApp com DDD"
+                            inputMode="tel"
+                            autoComplete="tel"
+                            maxLength={40}
+                          />
+                          <button
+                            onClick={() => void salvarSorteio()}
+                            disabled={salvandoSorteio}
+                            className="gold-button rounded-xl px-5 py-4 font-black uppercase disabled:opacity-60"
+                          >
+                            {salvandoSorteio ? "Confirmando..." : "Quero participar"}
+                          </button>
+                          {erroSorteio && <p className="text-center text-sm font-bold text-red-200">{erroSorteio}</p>}
+                        </div>
+                      )}
+                    </>
+                  ) : statusCampanha === "aguardando" ? (
+                    <>
+                      <p className="brand-title text-4xl leading-none text-gold">Campanha em breve</p>
+                      <h2 className="mt-2 text-xl font-black text-white">As inscrições começam em 15 de agosto de 2026.</h2>
+                      <p className="mt-2 text-sm font-bold text-stone-300">
+                        Você já pode jogar e compartilhar. Volte a partir de 15/08 para concorrer aos prêmios.
+                      </p>
+                    </>
                   ) : (
-                    <button
-                      onClick={salvarSorteio}
-                      disabled={salvandoSorteio}
-                      className="mt-4 w-full rounded-xl bg-emerald-950 px-5 py-4 font-black uppercase text-emerald-50 ring-1 ring-emerald-700 disabled:opacity-60"
-                    >
-                      {salvandoSorteio ? "Salvando..." : "Participar do sorteio"}
-                    </button>
-                  )}
-
-                  {erroSorteio && (
-                    <p className="mt-3 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">{erroSorteio}</p>
+                    <>
+                      <p className="brand-title text-4xl leading-none text-gold">Inscrições encerradas</p>
+                      <h2 className="mt-2 text-xl font-black text-white">A campanha terminou em 15 de setembro de 2026.</h2>
+                      <p className="mt-2 text-sm font-bold text-stone-300">
+                        O sorteio e a apuração final do ranking acontecem em 20/09/2026. O quiz continua disponível.
+                      </p>
+                    </>
                   )}
 
                   <p className="mt-4 text-center">
@@ -471,8 +494,8 @@ export default function Home() {
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
                   Desafiar os parceiros
                 </button>
-                <button onClick={iniciar} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase">
-                  Tentar de novo
+                <button onClick={() => void iniciar()} disabled={iniciando} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase disabled:opacity-60">
+                  {iniciando ? "Preparando..." : "Tentar de novo"}
                 </button>
               </div>
             </div>
@@ -488,6 +511,8 @@ export default function Home() {
 
         <footer className="mt-5 text-center text-xs font-bold uppercase tracking-[.2em] text-stone-500">por @zedagraxa.oficial</footer>
       </div>
+
+      <audio ref={motorRef} src="/sounds/motor.wav" preload="auto" />
 
       {modal && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/75 p-4">
@@ -553,8 +578,6 @@ export default function Home() {
         </div>
       )}
 
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <audio ref={motorRef} src="/sounds/motor.wav" preload="auto" />
     </main>
   );
 }
