@@ -356,7 +356,7 @@ export default function Home() {
               Quiz do Zé da Graxa
             </div>
             <h1 className="brand-title text-[2.85rem] leading-none text-white">Você acha que manda na estrada?</h1>
-            <p className="mt-4 text-lg font-bold text-stone-300">
+            <p className="mt-4 text-center text-lg font-bold text-stone-300">
               <span className="block">Responda a 5 perguntas</span>
               <span className="block">pra concorrer a 500 reais</span>
             </p>
