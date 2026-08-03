@@ -5,6 +5,7 @@ import { obterStatusCampanha, type StatusCampanha } from "@/lib/campanha";
 import { obterClassificacao, textoWhatsapp, textoWhatsappGrupo, type RankingInfo } from "@/lib/classificacao";
 import { embaralhar } from "@/lib/embaralhar";
 import { CONJUNTO_ATIVO, perguntasConjuntoA, perguntasConjuntoB, type Alternativa, type Pergunta } from "@/lib/perguntas";
+import { contextoMeta, rastrearMeta } from "@/lib/meta-pixel";
 
 type PerguntaSessao = Pergunta & { alternativasEmbaralhadas: Alternativa[] };
 type RespostaQuiz = { pergunta_id: number; alternativa_id: string };
@@ -123,6 +124,7 @@ export default function Home() {
     setRanking(null);
     setCarregandoRanking(false);
     setTela("quiz");
+    rastrearMeta("QuizStarted", { tentativa: tentativas });
     } catch {
       setErroRegistro("Falha de conexão ao iniciar o quiz.");
     } finally {
@@ -226,6 +228,7 @@ export default function Home() {
           sorteio_participa: true,
           sorteio_nome: nome,
           sorteio_telefone: telefone,
+          ...contextoMeta(),
         }),
       });
       const dados = await resposta.json().catch(() => ({}));
@@ -237,6 +240,7 @@ export default function Home() {
       setSorteioOk(true);
       if (typeof dados.id === "string") {
         setResultadoId(dados.id);
+        rastrearMeta("Lead", { content_name: "Inscrição Desafio do Asfalto" }, dados.id);
         await buscarRanking(dados.id);
       }
     } catch {
@@ -253,6 +257,7 @@ export default function Home() {
       return;
     }
 
+    rastrearMeta("QuizCompleted", { pontuacao: acertos, total_perguntas: sessao.length });
     setTela("resultado");
     setTimeout(async () => {
       await registrarResultado(false);
@@ -262,6 +267,7 @@ export default function Home() {
   async function compartilharWhatsapp(href: string) {
     const janela = window.open("", "_blank");
     await registrarResultado(true);
+    rastrearMeta("Share", { canal: "whatsapp" });
     if (janela) {
       console.log("[compartilhar] janela válida?", !!janela, "closed?", janela?.closed, "destino:", href);
       janela.location.href = href;
@@ -284,6 +290,7 @@ export default function Home() {
   async function compartilharStories() {
     const janelaFallback = window.open("", "_blank");
     const registrou = await registrarResultado(true);
+    rastrearMeta("Share", { canal: "instagram" });
     if (!registrou) {
       console.error("[compartilharStories] falha ao registrar compartilhamento");
     }

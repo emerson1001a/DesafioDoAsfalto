@@ -4,6 +4,7 @@ import { obterStatusCampanha } from "@/lib/campanha";
 import { CONJUNTO_ATIVO, perguntasConjuntoA, perguntasConjuntoB } from "@/lib/perguntas";
 import { verificarSessaoAssinada } from "@/lib/sessao-segura";
 import { tabelaResultados } from "@/lib/supabase-config";
+import { enviarLeadMeta } from "@/lib/meta-conversions-api";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       tempo_segundos: tempoSegundos,
     } as Record<string, unknown>;
 
+    let leadMeta: { nome: string; telefone: string } | null = null;
     if (Boolean(body.sorteio_participa)) {
       if (obterStatusCampanha() !== "ativa") {
         return NextResponse.json({ ok: false, erro: "Inscrições fora do período da campanha" }, { status: 403 });
@@ -81,6 +83,7 @@ export async function POST(request: NextRequest) {
       payload.sorteio_participa = true;
       payload.sorteio_nome = nome;
       payload.sorteio_telefone = telefone;
+      leadMeta = { nome, telefone };
     }
 
     const resposta = await fetch(`${SUPABASE_URL}/rest/v1/${tabelaResultados}`, {
@@ -97,6 +100,12 @@ export async function POST(request: NextRequest) {
     if (!resposta.ok) {
       console.error("[registrar] Supabase erro", resposta.status, await resposta.text());
       return NextResponse.json({ ok: false, erro: "Não foi possível registrar" }, { status: 502 });
+    }
+
+    if (leadMeta) {
+      await enviarLeadMeta({ request, body, eventId: sessao.id, ...leadMeta }).catch((erro) => {
+        console.error("[meta-capi] falha inesperada", erro);
+      });
     }
 
     return NextResponse.json({ ok: true, id: sessao.id, pontuacao, tempo_segundos: tempoSegundos });
