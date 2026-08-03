@@ -83,15 +83,17 @@ export function obterClassificacao(pontuacao: number): Classificacao {
 
 export type RankingInfo = { posicao: number; total: number };
 
-function textoCompartilhar(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo): string {
-  const colocacao = ranking ? ` e fiquei em ${ranking.posicao}º lugar` : "";
-  return `🏆 *R$500 NO PIX!* No Desafio do Asfalto, meu título foi ${classificacao} — acertei ${pontuacao}/5${colocacao}. Faz melhor? ${url}`;
+function textoCompartilhar(pontuacao: number, url: string, ranking?: RankingInfo): string {
+  const desempenho = ranking
+    ? `acertei ${pontuacao}/5 e fiquei em ${ranking.posicao}º entre ${ranking.total} participantes`
+    : `acertei ${pontuacao}/5`;
+  return `🏆 *R$500 NO PIX!* No Desafio do Asfalto, ${desempenho}. Faz melhor? ${url}`;
 }
 
-export function textoWhatsapp(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo): string {
-  return textoCompartilhar(classificacao, pontuacao, url, ranking);
+export function textoWhatsapp(pontuacao: number, url: string, ranking?: RankingInfo): string {
+  return textoCompartilhar(pontuacao, url, ranking);
 }
 
-export function textoWhatsappGrupo(classificacao: ClassificacaoId, pontuacao: number, url: string, ranking?: RankingInfo): string {
-  return textoCompartilhar(classificacao, pontuacao, url, ranking);
+export function textoWhatsappGrupo(pontuacao: number, url: string, ranking?: RankingInfo): string {
+  return textoCompartilhar(pontuacao, url, ranking);
 }
