@@ -357,7 +357,8 @@ export default function Home() {
             </div>
             <h1 className="brand-title text-[2.85rem] leading-none text-white">Você acha que manda na estrada?</h1>
             <p className="mt-4 text-lg font-bold text-stone-300">
-              Responda a 5 perguntas pra concorrer a 500 reais
+              <span className="block">Responda a 5 perguntas</span>
+              <span className="block">pra concorrer a 500 reais</span>
             </p>
 
             <button onClick={() => void iniciar()} disabled={iniciando} className="gold-button mt-7 w-full rounded-xl px-5 py-5 text-xl font-black uppercase disabled:opacity-60">
