@@ -85,11 +85,7 @@ export default function Home() {
   const cardUrl = `/api/card?score=${acertos}&nome=${encodeURIComponent(nomeCard)}&instagram=${encodeURIComponent(instagramCard)}`;
   const origemUrl = typeof window === "undefined" ? "" : window.location.origin + window.location.pathname;
   const whatsappGrupoUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_grupo&cb=2` : "";
-  const textoGrupo = textoWhatsappGrupo(classificacao.id, acertos, whatsappGrupoUrl, ranking ?? undefined);
-  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(textoGrupo)}`;
   const whatsappIndividualUrl = origemUrl ? `${origemUrl}?utm_source=whatsapp_individual&cb=2` : "";
-  const textoIndividual = textoWhatsapp(classificacao.id, acertos, whatsappIndividualUrl, ranking ?? undefined);
-  const whatsappIndividualHref = `https://wa.me/?text=${encodeURIComponent(textoIndividual)}`;
 
   async function iniciar() {
     if (iniciando) return;
@@ -142,19 +138,24 @@ export default function Home() {
     }
   }
 
-  async function buscarRanking(id: string) {
+  async function buscarRanking(id: string): Promise<RankingInfo | null> {
     setCarregandoRanking(true);
     try {
       const resposta = await fetch(`/api/ranking?id=${encodeURIComponent(id)}`);
       if (resposta.ok) {
         const dados = await resposta.json();
-        if (dados.ok) setRanking({ posicao: dados.posicao, total: dados.total });
+        if (dados.ok) {
+          const rankingAtual = { posicao: dados.posicao, total: dados.total };
+          setRanking(rankingAtual);
+          return rankingAtual;
+        }
       }
     } catch {
       // ranking é opcional — falha silenciosa
     } finally {
       setCarregandoRanking(false);
     }
+    return null;
   }
 
   async function registrarResultado(compartilhou = false): Promise<string | null> {
@@ -260,13 +261,20 @@ export default function Home() {
     rastrearMeta("QuizCompleted", { pontuacao: acertos, total_perguntas: sessao.length });
     setTela("resultado");
     setTimeout(async () => {
-      await registrarResultado(false);
+      const id = await registrarResultado(false);
+      if (id) await buscarRanking(id);
     }, 0);
   }
 
-  async function compartilharWhatsapp(href: string) {
+  async function compartilharWhatsapp(tipo: "grupo" | "individual") {
     const janela = window.open("", "_blank");
-    await registrarResultado(true);
+    const id = await registrarResultado(true);
+    const rankingCompartilhar = ranking ?? (id ? await buscarRanking(id) : null);
+    const url = tipo === "grupo" ? whatsappGrupoUrl : whatsappIndividualUrl;
+    const mensagem = tipo === "grupo"
+      ? textoWhatsappGrupo(acertos, url, rankingCompartilhar ?? undefined)
+      : textoWhatsapp(acertos, url, rankingCompartilhar ?? undefined);
+    const href = `https://wa.me/?text=${encodeURIComponent(mensagem)}`;
     rastrearMeta("Share", { canal: "whatsapp" });
     if (janela) {
       console.log("[compartilhar] janela válida?", !!janela, "closed?", janela?.closed, "destino:", href);
@@ -498,6 +506,23 @@ export default function Home() {
 
                 <p className="text-base font-bold text-stone-200">{classificacao.texto}</p>
 
+                <div className="rounded-xl border border-fuchsia-500/40 bg-fuchsia-950/30 p-4 text-center">
+                  <p className="font-black text-white">Acompanhe o Zé da Graxa no Instagram</p>
+                  <p className="mt-1 text-sm font-bold text-stone-300">
+                    Siga para acompanhar o sorteio, os resultados e os próximos desafios.
+                  </p>
+                  <a
+                    href="https://www.instagram.com/zedagraxa.oficial/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => rastrearMeta("InstagramProfileClick", { posicao: "resultado_quiz" })}
+                    className="mt-3 block rounded-xl bg-gradient-to-r from-fuchsia-600 via-rose-500 to-amber-500 px-5 py-4 font-black uppercase text-white shadow-lg"
+                  >
+                    Seguir @zedagraxa.oficial
+                  </a>
+                  <p className="mt-2 text-[11px] text-stone-500">Sua participação no sorteio não depende de seguir o perfil.</p>
+                </div>
+
                 <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
                   Desafiar os parceiros
                 </button>
@@ -530,13 +555,13 @@ export default function Home() {
             </div>
             <div className="grid gap-3">
               <button
-                onClick={() => void compartilharWhatsapp(whatsappHref)}
+                onClick={() => void compartilharWhatsapp("grupo")}
                 className="rounded-xl bg-emerald-950 px-5 py-4 text-center font-black uppercase text-emerald-50 ring-1 ring-emerald-700"
               >
                 Mandar nos grupos de WhatsApp
               </button>
               <button
-                onClick={() => void compartilharWhatsapp(whatsappIndividualHref)}
+                onClick={() => void compartilharWhatsapp("individual")}
                 className="rounded-xl border border-emerald-700 px-5 py-4 text-center font-black uppercase text-emerald-100"
               >
                 Desafiar um parceiro direto
