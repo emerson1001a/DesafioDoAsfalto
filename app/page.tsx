@@ -431,7 +431,7 @@ export default function Home() {
                   Você acertou <span className="text-gold">{acertos} de {sessao.length}</span> perguntas
                   {ranking ? (
                     <> e ficou em <span className="text-gold">{ranking.posicao.toLocaleString("pt-BR")}º lugar</span> entre {ranking.total.toLocaleString("pt-BR")} participantes!</>
-                  ) : "!"}
+                  ) : ". Cadastre-se para descobrir sua posição no ranking!"}
                 </p>
                 {carregandoRanking && (
                   <p className="mt-2 text-sm font-bold text-stone-500">Calculando sua posição...</p>
