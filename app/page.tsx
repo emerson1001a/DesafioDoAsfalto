@@ -519,9 +519,12 @@ export default function Home() {
                   <p className="mt-2 text-[11px] text-stone-500">Sua participação no sorteio não depende de seguir o perfil.</p>
                 </div>
 
-                <button onClick={abrirCompartilhamento} className="gold-button rounded-xl px-5 py-5 text-lg font-black uppercase">
-                  Desafiar os parceiros
-                </button>
+                <div>
+                  <button onClick={abrirCompartilhamento} className="gold-button w-full rounded-xl px-5 py-5 text-lg font-black uppercase">
+                    Compartilhar meu resultado
+                  </button>
+                  <p className="mt-2 text-center text-sm font-bold text-stone-300">Será que os parceiros fazem melhor que você?</p>
+                </div>
                 <button onClick={() => void iniciar()} disabled={iniciando} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase disabled:opacity-60">
                   {iniciando ? "Preparando..." : "Tentar de novo"}
                 </button>
