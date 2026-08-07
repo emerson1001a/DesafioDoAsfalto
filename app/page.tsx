@@ -441,40 +441,48 @@ export default function Home() {
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
                   {statusCampanha === "ativa" ? (
                     <>
-                      <p className="brand-title text-4xl leading-none text-gold">Concorra aos prêmios</p>
-                      <h2 className="mt-2 text-xl font-black text-white">Cadastre-se para o sorteio e para o ranking valendo Pix.</h2>
                       {sorteioOk ? (
-                        <p className="mt-4 rounded-xl border border-emerald-600/50 bg-emerald-950/50 p-3 text-center font-black text-emerald-100">
-                          Inscrição confirmada. Boa sorte!
-                        </p>
-                      ) : (
-                        <div className="mt-4 grid gap-3">
-                          <input
-                            value={nomeSorteio}
-                            onChange={(event) => setNomeSorteio(event.target.value)}
-                            className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                            placeholder="Seu nome"
-                            autoComplete="name"
-                            maxLength={120}
-                          />
-                          <input
-                            value={telefoneSorteio}
-                            onChange={(event) => setTelefoneSorteio(event.target.value)}
-                            className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                            placeholder="WhatsApp com DDD"
-                            inputMode="tel"
-                            autoComplete="tel"
-                            maxLength={40}
-                          />
-                          <button
-                            onClick={() => void salvarSorteio()}
-                            disabled={salvandoSorteio}
-                            className="gold-button rounded-xl px-5 py-4 font-black uppercase disabled:opacity-60"
-                          >
-                            {salvandoSorteio ? "Confirmando..." : "Quero participar"}
+                        <div className="grid gap-3">
+                          <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
+                            <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
+                            <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
                           </button>
-                          {erroSorteio && <p className="text-center text-sm font-bold text-red-200">{erroSorteio}</p>}
+                          <p className="rounded-xl border border-emerald-600/50 bg-emerald-950/50 p-3 text-center font-black text-emerald-100">
+                            Inscrição confirmada. Boa sorte!
+                          </p>
                         </div>
+                      ) : (
+                        <>
+                          <p className="brand-title text-4xl leading-none text-gold">Concorra aos prêmios</p>
+                          <h2 className="mt-2 text-xl font-black text-white">Cadastre-se para o sorteio e para o ranking valendo Pix.</h2>
+                          <div className="mt-4 grid gap-3">
+                            <input
+                              value={nomeSorteio}
+                              onChange={(event) => setNomeSorteio(event.target.value)}
+                              className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                              placeholder="Seu nome"
+                              autoComplete="name"
+                              maxLength={120}
+                            />
+                            <input
+                              value={telefoneSorteio}
+                              onChange={(event) => setTelefoneSorteio(event.target.value)}
+                              className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
+                              placeholder="WhatsApp com DDD"
+                              inputMode="tel"
+                              autoComplete="tel"
+                              maxLength={40}
+                            />
+                            <button
+                              onClick={() => void salvarSorteio()}
+                              disabled={salvandoSorteio}
+                              className="gold-button rounded-xl px-5 py-4 font-black uppercase disabled:opacity-60"
+                            >
+                              {salvandoSorteio ? "Confirmando..." : "Quero participar"}
+                            </button>
+                            {erroSorteio && <p className="text-center text-sm font-bold text-red-200">{erroSorteio}</p>}
+                          </div>
+                        </>
                       )}
                     </>
                   ) : statusCampanha === "aguardando" ? (
@@ -519,12 +527,14 @@ export default function Home() {
                   <p className="mt-2 text-[11px] text-stone-500">Sua participação no sorteio não depende de seguir o perfil.</p>
                 </div>
 
-                <div>
-                  <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
-                    <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
-                    <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
-                  </button>
-                </div>
+                {!sorteioOk && (
+                  <div>
+                    <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
+                      <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
+                      <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
+                    </button>
+                  </div>
+                )}
                 <button onClick={() => void iniciar()} disabled={iniciando} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase disabled:opacity-60">
                   {iniciando ? "Preparando..." : "Tentar de novo"}
                 </button>
