@@ -425,8 +425,9 @@ export default function Home() {
 
         {tela === "resultado" && (
           <section className="space-y-4">
-            <div className="road-card overflow-hidden rounded-2xl">
-              <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
+            <div className="result-card overflow-hidden rounded-[1.4rem]">
+              <div className="result-road-hero" aria-hidden="true" />
+              <div className="result-summary px-5 pb-5 pt-4">
                 <p className="text-xl font-black leading-snug text-white">
                   Você acertou <span className="text-gold">{acertos} de {sessao.length}</span> perguntas
                   {ranking ? (
@@ -437,38 +438,49 @@ export default function Home() {
                   <p className="mt-2 text-sm font-bold text-stone-500">Calculando sua posição...</p>
                 )}
               </div>
-              <div className="grid gap-3 p-5">
-                <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
+              <div className="result-divider" aria-hidden="true"><span>◆</span></div>
+              <div className="grid gap-4 p-5 pt-4">
+                <div className="result-action-panel rounded-2xl p-4">
                   {statusCampanha === "ativa" ? (
                     <>
                       {sorteioOk ? (
-                        <div className="grid gap-3">
-                          <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
-                            <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
-                            <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
-                          </button>
-                          <p className="rounded-xl border border-emerald-600/50 bg-emerald-950/50 p-3 text-center font-black text-emerald-100">
-                            Inscrição confirmada. Boa sorte!
+                        <div>
+                          <p className="success-banner rounded-xl p-3 text-center font-black">
+                            <span aria-hidden="true">✓</span> Inscrição confirmada. Boa sorte!
                           </p>
+                          <button
+                            onClick={abrirCompartilhamento}
+                            className="premium-gold-button group relative mt-6 flex w-full flex-col items-center overflow-hidden rounded-2xl px-5 py-5 text-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-300/50"
+                          >
+                            <span aria-hidden="true" className="button-glint" />
+                            <span className="relative text-xl font-black uppercase tracking-tight">↗ Compartilhar meu resultado</span>
+                            <span className="relative mt-1.5 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
+                          </button>
                         </div>
                       ) : (
                         <>
-                          <p className="brand-title text-4xl leading-none text-gold">Concorra aos prêmios</p>
-                          <h2 className="mt-2 text-xl font-black text-white">Cadastre-se para o sorteio e para o ranking valendo Pix.</h2>
-                          <div className="mt-4 grid gap-3">
+                          <p className="brand-title text-center text-4xl leading-none text-gold">Concorra aos prêmios</p>
+                          <h2 className="mx-auto mt-2 max-w-sm text-center text-base font-bold leading-snug text-stone-200">
+                            Cadastre-se para o sorteio e veja sua posição no ranking valendo Pix.
+                          </h2>
+                          <div className="mt-5 grid gap-3">
+                            <label className="result-field-label" htmlFor="nome-sorteio">Seu nome</label>
                             <input
+                              id="nome-sorteio"
                               value={nomeSorteio}
                               onChange={(event) => setNomeSorteio(event.target.value)}
-                              className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                              placeholder="Seu nome"
+                              className="result-input w-full rounded-xl px-4 py-3 outline-none"
+                              placeholder="Digite seu nome completo"
                               autoComplete="name"
                               maxLength={120}
                             />
+                            <label className="result-field-label mt-1" htmlFor="telefone-sorteio">WhatsApp com DDD</label>
                             <input
+                              id="telefone-sorteio"
                               value={telefoneSorteio}
                               onChange={(event) => setTelefoneSorteio(event.target.value)}
-                              className="w-full rounded-xl border border-stone-700 bg-black/45 px-4 py-3 outline-none focus:border-gold"
-                              placeholder="WhatsApp com DDD"
+                              className="result-input w-full rounded-xl px-4 py-3 outline-none"
+                              placeholder="(11) 99999-9999"
                               inputMode="tel"
                               autoComplete="tel"
                               maxLength={40}
@@ -476,7 +488,7 @@ export default function Home() {
                             <button
                               onClick={() => void salvarSorteio()}
                               disabled={salvandoSorteio}
-                              className="gold-button rounded-xl px-5 py-4 font-black uppercase disabled:opacity-60"
+                              className="premium-gold-button mt-2 rounded-2xl px-5 py-4 text-lg font-black uppercase disabled:opacity-60"
                             >
                               {salvandoSorteio ? "Confirmando..." : "Quero participar"}
                             </button>
@@ -503,14 +515,14 @@ export default function Home() {
                     </>
                   )}
 
-                  <p className="mt-4 text-center">
+                  <p className="mt-5 text-center">
                     <a href="/regulamento" target="_blank" rel="noopener noreferrer" className="text-xs text-stone-600 hover:text-stone-400 underline underline-offset-2">
                       Ver regulamento completo
                     </a>
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-fuchsia-500/40 bg-fuchsia-950/30 p-4 text-center">
+                <div className="instagram-panel rounded-2xl p-4 text-center">
                   <p className="font-black text-white">Acompanhe o Zé da Graxa no Instagram</p>
                   <p className="mt-1 text-sm font-bold text-stone-300">
                     Siga para acompanhar o sorteio, os resultados e os próximos desafios.
@@ -520,7 +532,7 @@ export default function Home() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => rastrearMeta("InstagramProfileClick", { posicao: "resultado_quiz" })}
-                    className="mt-3 block rounded-xl bg-gradient-to-r from-fuchsia-600 via-rose-500 to-amber-500 px-5 py-4 font-black uppercase text-white shadow-lg"
+                    className="instagram-button mt-3 block rounded-xl px-5 py-4 font-black uppercase text-white"
                   >
                     Seguir @zedagraxa.oficial
                   </a>
@@ -529,13 +541,13 @@ export default function Home() {
 
                 {!sorteioOk && (
                   <div>
-                    <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
+                    <button onClick={abrirCompartilhamento} className="secondary-share-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
                       <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
                       <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
                     </button>
                   </div>
                 )}
-                <button onClick={() => void iniciar()} disabled={iniciando} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase disabled:opacity-60">
+                <button onClick={() => void iniciar()} disabled={iniciando} className="retry-button rounded-xl px-5 py-4 font-black uppercase disabled:opacity-60">
                   {iniciando ? "Preparando..." : "Tentar de novo"}
                 </button>
               </div>
