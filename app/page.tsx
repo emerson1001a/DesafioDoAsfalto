@@ -427,18 +427,15 @@ export default function Home() {
           <section className="space-y-4">
             <div className="road-card overflow-hidden rounded-2xl">
               <div className="bg-gradient-to-br from-black via-stone-950 to-yellow-950 p-5">
-                <p className="text-sm font-black uppercase text-gold">Seu título</p>
-                <div className="mt-2 flex items-end justify-between gap-3">
-                  <h1 className="brand-title min-w-0 flex-1 text-[2.5rem] leading-none text-white">{classificacao.titulo}</h1>
-                  <p className="flex-shrink-0 text-[1.75rem] font-black text-gold">{acertos}/{sessao.length}</p>
-                </div>
-                {carregandoRanking ? (
-                  <p className="mt-1 text-sm font-bold text-stone-500">calculando sua posição...</p>
-                ) : ranking ? (
-                  <p className="mt-1 text-sm font-bold text-stone-300">
-                    Você ficou em {ranking.posicao.toLocaleString("pt-BR")}º de {ranking.total.toLocaleString("pt-BR")} participantes
-                  </p>
-                ) : null}
+                <p className="text-xl font-black leading-snug text-white">
+                  Você acertou <span className="text-gold">{acertos} de {sessao.length}</span> perguntas
+                  {ranking ? (
+                    <> e ficou em <span className="text-gold">{ranking.posicao.toLocaleString("pt-BR")}º lugar</span> entre {ranking.total.toLocaleString("pt-BR")} participantes!</>
+                  ) : "!"}
+                </p>
+                {carregandoRanking && (
+                  <p className="mt-2 text-sm font-bold text-stone-500">Calculando sua posição...</p>
+                )}
               </div>
               <div className="grid gap-3 p-5">
                 <div className="rounded-xl border border-gold/25 bg-black/35 p-4">
@@ -504,8 +501,6 @@ export default function Home() {
                     </a>
                   </p>
                 </div>
-
-                <p className="text-base font-bold text-stone-200">{classificacao.texto}</p>
 
                 <div className="rounded-xl border border-fuchsia-500/40 bg-fuchsia-950/30 p-4 text-center">
                   <p className="font-black text-white">Acompanhe o Zé da Graxa no Instagram</p>
