@@ -520,10 +520,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <button onClick={abrirCompartilhamento} className="gold-button w-full rounded-xl px-5 py-5 text-lg font-black uppercase">
-                    Compartilhar meu resultado
+                  <button onClick={abrirCompartilhamento} className="gold-button flex w-full flex-col items-center rounded-xl px-5 py-4 text-center">
+                    <span className="text-lg font-black uppercase">Compartilhar meu resultado</span>
+                    <span className="mt-1 text-sm font-bold normal-case">Será que os parceiros fazem melhor que você?</span>
                   </button>
-                  <p className="mt-2 text-center text-sm font-bold text-stone-300">Será que os parceiros fazem melhor que você?</p>
                 </div>
                 <button onClick={() => void iniciar()} disabled={iniciando} className="rounded-xl border border-stone-700 px-5 py-4 font-black uppercase disabled:opacity-60">
                   {iniciando ? "Preparando..." : "Tentar de novo"}
