@@ -2,10 +2,10 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import MetaPixel from "./MetaPixel";
 
-// Ao trocar a imagem no futuro, incremente o "v" (ex: ?v=3) para
+// Ao trocar a imagem no futuro, incremente o "v" (ex: ?v=4) para
 // forçar WhatsApp/Facebook a buscarem a versão nova, sem depender
 // de cache expirar sozinho.
-const ogImage = "/post-instagram-zedagraxa-quiz.png?v=2";
+const ogImage = "/desafio-do-asfalto-whatsapp-zedagraxa-1200x630.png?v=3";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://desafio-do-asfalto.vercel.app"),
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: "POR @ZEDAGRAXA.OFICIAL",
     siteName: "@Zedagraxa.oficial",
     type: "website",
-    images: [{ url: ogImage, width: 1632, height: 2176, alt: "Desafio do Asfalto" }]
+    images: [{ url: ogImage, width: 1200, height: 630, alt: "Desafio do Asfalto" }]
   },
   twitter: {
     card: "summary_large_image",
