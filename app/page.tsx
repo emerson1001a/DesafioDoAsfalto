@@ -461,7 +461,7 @@ export default function Home() {
                         <>
                           <p className="brand-title text-center text-4xl leading-none text-gold">Concorra aos prêmios</p>
                           <h2 className="mx-auto mt-2 max-w-sm text-center text-base font-bold leading-snug text-stone-200">
-                            Cadastre-se para o sorteio e veja sua posição no ranking valendo Pix.
+                            Coloque o seu NOME e o seu WHATSAPP e clique em QUERO PARTICIPAR!
                           </h2>
                           <div className="mt-5 grid gap-3">
                             <label className="result-field-label" htmlFor="nome-sorteio">Seu nome</label>
